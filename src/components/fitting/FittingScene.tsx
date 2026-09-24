@@ -47,14 +47,23 @@ export function FittingScene({ body, worn, view }: Props) {
     instance.update();
   }, [view]);
 
-  const eyeLevel = profile.heightM * 0.56;
-  const distance = profile.heightM * 1.5;
+  /*
+    Framing. The camera looks at the middle of the figure, and the distance is
+    derived from the field of view rather than guessed: at 32° a camera sees
+    2 * d * tan(16°) of height, so to fit the whole body plus a fifth of its
+    height as breathing room the distance has to be about 2.1 heights. Guessing
+    1.5 cut the legs off at the bottom of the frame.
+  */
+  const FIT_MARGIN = 1.2;
+  const halfFov = (32 / 2) * (Math.PI / 180);
+  const centreY = profile.heightM * 0.5;
+  const distance = (profile.heightM * FIT_MARGIN) / 2 / Math.tan(halfFov);
 
   return (
     <Canvas
       shadows
       dpr={[1, 2]}
-      camera={{ position: [0, eyeLevel, distance], fov: 32, near: 0.05, far: 50 }}
+      camera={{ position: [0, centreY, distance], fov: 32, near: 0.05, far: 50 }}
       gl={{ antialias: true, preserveDrawingBuffer: false }}
       // measure by polling: some embedded webviews never fire ResizeObserver,
       // and without a measurement the renderer is never created at all
@@ -96,10 +105,10 @@ export function FittingScene({ body, worn, view }: Props) {
 
       <OrbitControls
         ref={controls}
-        target={[0, eyeLevel, 0]}
+        target={[0, centreY, 0]}
         enablePan={false}
-        minDistance={profile.heightM * 0.55}
-        maxDistance={profile.heightM * 2.6}
+        minDistance={profile.heightM * 0.7}
+        maxDistance={profile.heightM * 3.2}
         minPolarAngle={Math.PI * 0.18}
         maxPolarAngle={Math.PI * 0.62}
         enableDamping

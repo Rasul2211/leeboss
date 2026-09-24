@@ -43,6 +43,17 @@ export function drapeOffset(fit: FitType, size: string | null): number {
   return FIT_OFFSET[fit] + (size ? (SIZE_OFFSET[size] ?? 0) : 0);
 }
 
+/**
+ * How far a top has to flare at the hem to fall outside a waistband.
+ *
+ * Top and bottom are always drawn at the same chosen size, so the size
+ * allowance cancels out and only the difference in cut matters: the widest
+ * trousers are OVERSIZE, and a top already cut loose needs almost no flare.
+ */
+function hemClearance(ownOffset: number): number {
+  return Math.max(0, FIT_OFFSET.OVERSIZE - ownOffset) + 0.005;
+}
+
 export type GarmentSpec = {
   slot: Slot;
   subcategory: string;
@@ -78,11 +89,23 @@ function buildTop(spec: GarmentSpec, body: BodyProfile, offset: number, longSlee
   const hem = longSleeve ? levels.hip - 0.055 * h : levels.hip - 0.02 * h;
   const collar = levels.neck - 0.004 * h;
 
-  const shell = loft(offsetRings(sliceRings(body.torso, hem, collar), offset), {
-    capBottom: false,
-    capTop: false,
-    squareness: 2.25,
+  /*
+    An untucked top has to clear whatever is worn under it. Trousers reach the
+    waist, and a wide pair stands further off the body than a fitted shirt, so a
+    single uniform offset leaves the waistband poking through the shirt.
+
+    Real shirts solve this by flaring towards the hem, and so does this one: the
+    offset ramps from nothing at the waist to full clearance at the hem, which
+    both looks right and guarantees the top wins the overlap.
+  */
+  const span = Math.max(1e-6, levels.waist - hem);
+  const rings = sliceRings(body.torso, hem, collar).map((ring) => {
+    const belowWaist = Math.min(1, Math.max(0, (levels.waist - ring.y) / span));
+    const extra = offset + hemClearance(offset) * belowWaist;
+    return { y: ring.y, rx: ring.rx + extra, rz: ring.rz + extra };
   });
+
+  const shell = loft(rings, { capBottom: false, capTop: false, squareness: 2.25 });
 
   const pieces: GarmentPiece[] = [{ key: 'body', geometry: shell }];
 
