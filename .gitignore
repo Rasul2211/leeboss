@@ -18,3 +18,7 @@ prisma/dev.db*
 
 # byte-identical to public/products; regenerate with _assets/catalog.py
 _assets/catalog/images/
+
+# generated production secret, never committed
+.auth-secret.txt
+.env.production
