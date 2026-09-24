@@ -1,0 +1,1350 @@
+[
+ {
+  "sku": "BT-001",
+  "slug": "bryuki-belye",
+  "name": "Брюки белые",
+  "subcategory": "Брюки",
+  "mannequinSlot": "BOTTOM",
+  "sizeType": "LETTER",
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL"
+  ],
+  "sizesStated": true,
+  "price": 250,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "white",
+    "name": "Белый",
+    "hex": "#F3F1EC"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/bryuki-belye.jpg",
+  "source": "photo_2026-09-22_18-36-54.jpg"
+ },
+ {
+  "sku": "BT-002",
+  "slug": "bryuki-korichnevye",
+  "name": "Брюки коричневые",
+  "subcategory": "Брюки",
+  "mannequinSlot": "BOTTOM",
+  "sizeType": "LETTER",
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL"
+  ],
+  "sizesStated": true,
+  "price": 250,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "brown",
+    "name": "Коричневый",
+    "hex": "#6B4A32"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/bryuki-korichnevye.jpg",
+  "source": "photo_2026-09-22_18-37-00.jpg"
+ },
+ {
+  "sku": "BT-003",
+  "slug": "bryuki-temno-sinie-lyon",
+  "name": "Брюки тёмно-синие льняные",
+  "subcategory": "Брюки",
+  "mannequinSlot": "BOTTOM",
+  "sizeType": "LETTER",
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL"
+  ],
+  "sizesStated": false,
+  "price": 250,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "navy",
+    "name": "Тёмно-синий",
+    "hex": "#23304A"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/bryuki-temno-sinie-lyon.jpg",
+  "source": "photo_2026-09-22_18-37-04.jpg"
+ },
+ {
+  "sku": "BT-004",
+  "slug": "bryuki-kremovye-lyon",
+  "name": "Брюки кремовые льняные",
+  "subcategory": "Брюки",
+  "mannequinSlot": "BOTTOM",
+  "sizeType": "LETTER",
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL"
+  ],
+  "sizesStated": false,
+  "price": 250,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "cream",
+    "name": "Кремовый",
+    "hex": "#EBE3D2"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/bryuki-kremovye-lyon.jpg",
+  "source": "photo_2026-09-22_18-37-07.jpg"
+ },
+ {
+  "sku": "BT-005",
+  "slug": "shtany-chernye",
+  "name": "Штаны чёрные",
+  "subcategory": "Штаны",
+  "mannequinSlot": "BOTTOM",
+  "sizeType": "LETTER",
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL"
+  ],
+  "sizesStated": false,
+  "price": 250,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "black",
+    "name": "Чёрный",
+    "hex": "#1A1A1A"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/shtany-chernye.jpg",
+  "source": "photo_2026-09-22_18-37-11.jpg"
+ },
+ {
+  "sku": "BT-006",
+  "slug": "dzhinsy-chernye",
+  "name": "Джинсы чёрные",
+  "subcategory": "Джинсы",
+  "mannequinSlot": "BOTTOM",
+  "sizeType": "LETTER",
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL"
+  ],
+  "sizesStated": false,
+  "price": 250,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "black",
+    "name": "Чёрный",
+    "hex": "#1A1A1A"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/dzhinsy-chernye.jpg",
+  "source": "photo_2026-09-22_18-37-15.jpg"
+ },
+ {
+  "sku": "BT-007",
+  "slug": "bryuki-kremovye",
+  "name": "Брюки кремовые",
+  "subcategory": "Брюки",
+  "mannequinSlot": "BOTTOM",
+  "sizeType": "LETTER",
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL"
+  ],
+  "sizesStated": false,
+  "price": 250,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "cream",
+    "name": "Кремовый",
+    "hex": "#EBE3D2"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/bryuki-kremovye.jpg",
+  "source": "photo_2026-09-22_18-37-18.jpg"
+ },
+ {
+  "sku": "BT-008",
+  "slug": "shtany-temno-sinie",
+  "name": "Штаны тёмно-синие",
+  "subcategory": "Штаны",
+  "mannequinSlot": "BOTTOM",
+  "sizeType": "LETTER",
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL"
+  ],
+  "sizesStated": false,
+  "price": 250,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "navy",
+    "name": "Тёмно-синий",
+    "hex": "#23304A"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/shtany-temno-sinie.jpg",
+  "source": "photo_2026-09-22_18-37-23.jpg"
+ },
+ {
+  "sku": "BT-009",
+  "slug": "shtany-korichnevye",
+  "name": "Штаны коричневые",
+  "subcategory": "Штаны",
+  "mannequinSlot": "BOTTOM",
+  "sizeType": "LETTER",
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL"
+  ],
+  "sizesStated": false,
+  "price": 250,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "khaki",
+    "name": "Хаки",
+    "hex": "#7A6A4F"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/shtany-korichnevye.jpg",
+  "source": "photo_2026-09-22_18-37-26.jpg"
+ },
+ {
+  "sku": "BT-010",
+  "slug": "bryuki-temno-sinie",
+  "name": "Брюки тёмно-синие",
+  "subcategory": "Брюки",
+  "mannequinSlot": "BOTTOM",
+  "sizeType": "LETTER",
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL"
+  ],
+  "sizesStated": false,
+  "price": 300,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "navy",
+    "name": "Тёмно-синий",
+    "hex": "#23304A"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/bryuki-temno-sinie.jpg",
+  "source": "photo_2026-09-22_18-37-30.jpg"
+ },
+ {
+  "sku": "BT-011",
+  "slug": "dzhinsy-golubye-klassika",
+  "name": "Джинсы голубые",
+  "subcategory": "Джинсы",
+  "mannequinSlot": "BOTTOM",
+  "sizeType": "LETTER",
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL"
+  ],
+  "sizesStated": false,
+  "price": 280,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "blue",
+    "name": "Голубой",
+    "hex": "#5B7FA6"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/dzhinsy-golubye-klassika.jpg",
+  "source": "photo_2026-09-22_18-37-33.jpg"
+ },
+ {
+  "sku": "BT-012",
+  "slug": "dzhinsy-temno-sinie-shirokie",
+  "name": "Джинсы тёмно-синие широкие",
+  "subcategory": "Джинсы",
+  "mannequinSlot": "BOTTOM",
+  "sizeType": "LETTER",
+  "sizes": [
+   "M",
+   "L",
+   "XL"
+  ],
+  "sizesStated": true,
+  "price": 360,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "navy",
+    "name": "Тёмно-синий",
+    "hex": "#23304A"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/dzhinsy-temno-sinie-shirokie.jpg",
+  "source": "photo_2026-09-22_18-37-36.jpg"
+ },
+ {
+  "sku": "BT-013",
+  "slug": "dzhinsy-korichnevye-gradient",
+  "name": "Джинсы коричневые градиент",
+  "subcategory": "Джинсы",
+  "mannequinSlot": "BOTTOM",
+  "sizeType": "LETTER",
+  "sizes": [
+   "M",
+   "L",
+   "XL"
+  ],
+  "sizesStated": true,
+  "price": 360,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "brown",
+    "name": "Коричневый",
+    "hex": "#6B4A32"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/dzhinsy-korichnevye-gradient.jpg",
+  "source": "photo_2026-09-22_18-37-40.jpg"
+ },
+ {
+  "sku": "BT-014",
+  "slug": "dzhinsy-svetlye-potertye",
+  "name": "Джинсы светлые потёртые",
+  "subcategory": "Джинсы",
+  "mannequinSlot": "BOTTOM",
+  "sizeType": "LETTER",
+  "sizes": [
+   "M",
+   "L",
+   "XL",
+   "XXL"
+  ],
+  "sizesStated": true,
+  "price": 330,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "lblue",
+    "name": "Светло-синий",
+    "hex": "#8FA9C4"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/dzhinsy-svetlye-potertye.jpg",
+  "source": "photo_2026-09-22_18-37-44.jpg"
+ },
+ {
+  "sku": "BT-015",
+  "slug": "dzhinsy-golubye-shirokie",
+  "name": "Джинсы голубые широкие",
+  "subcategory": "Джинсы",
+  "mannequinSlot": "BOTTOM",
+  "sizeType": "LETTER",
+  "sizes": [
+   "M",
+   "L",
+   "XL",
+   "XXL"
+  ],
+  "sizesStated": false,
+  "price": 330,
+  "priceAssumed": true,
+  "brand": null,
+  "colors": [
+   {
+    "key": "blue",
+    "name": "Голубой",
+    "hex": "#5B7FA6"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/dzhinsy-golubye-shirokie.jpg",
+  "source": "photo_2026-09-22_18-37-47.jpg"
+ },
+ {
+  "sku": "BT-016",
+  "slug": "dzhinsy-golubye-baggy",
+  "name": "Джинсы голубые багги",
+  "subcategory": "Джинсы",
+  "mannequinSlot": "BOTTOM",
+  "sizeType": "LETTER",
+  "sizes": [
+   "M",
+   "L",
+   "XL",
+   "XXL"
+  ],
+  "sizesStated": true,
+  "price": 360,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "blue",
+    "name": "Голубой",
+    "hex": "#5B7FA6"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/dzhinsy-golubye-baggy.jpg",
+  "source": "photo_2026-09-22_18-37-50.jpg"
+ },
+ {
+  "sku": "TP-001",
+  "slug": "futbolki-s-printom",
+  "name": "Футболки с принтом",
+  "subcategory": "Футболки",
+  "mannequinSlot": "TOP",
+  "sizeType": "LETTER",
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL"
+  ],
+  "sizesStated": false,
+  "price": 170,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "black",
+    "name": "Чёрный",
+    "hex": "#1A1A1A"
+   },
+   {
+    "key": "cream",
+    "name": "Кремовый",
+    "hex": "#EBE3D2"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/futbolki-s-printom.jpg",
+  "source": "photo_2026-09-22_18-37-53.jpg"
+ },
+ {
+  "sku": "TP-002",
+  "slug": "futbolka-belaya-oversayz",
+  "name": "Футболка белая оверсайз",
+  "subcategory": "Футболки",
+  "mannequinSlot": "TOP",
+  "sizeType": "LETTER",
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL"
+  ],
+  "sizesStated": false,
+  "price": 160,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "white",
+    "name": "Белый",
+    "hex": "#F3F1EC"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/futbolka-belaya-oversayz.jpg",
+  "source": "photo_2026-09-22_18-37-57.jpg"
+ },
+ {
+  "sku": "TP-003",
+  "slug": "futbolki-bazovye",
+  "name": "Футболки базовые",
+  "subcategory": "Футболки",
+  "mannequinSlot": "TOP",
+  "sizeType": "LETTER",
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL"
+  ],
+  "sizesStated": false,
+  "price": 180,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "black",
+    "name": "Чёрный",
+    "hex": "#1A1A1A"
+   },
+   {
+    "key": "white",
+    "name": "Белый",
+    "hex": "#F3F1EC"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/futbolki-bazovye.jpg",
+  "source": "photo_2026-09-22_18-38-00.jpg"
+ },
+ {
+  "sku": "TP-004",
+  "slug": "teniska-korichnevaya",
+  "name": "Тениска коричневая",
+  "subcategory": "Тениска",
+  "mannequinSlot": "TOP",
+  "sizeType": "LETTER",
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL"
+  ],
+  "sizesStated": false,
+  "price": 250,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "brown",
+    "name": "Коричневый",
+    "hex": "#6B4A32"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/teniska-korichnevaya.jpg",
+  "source": "photo_2026-09-22_18-38-04.jpg"
+ },
+ {
+  "sku": "TP-005",
+  "slug": "teniska-temno-sinyaya",
+  "name": "Тениска тёмно-синяя",
+  "subcategory": "Тениска",
+  "mannequinSlot": "TOP",
+  "sizeType": "LETTER",
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL"
+  ],
+  "sizesStated": false,
+  "price": 250,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "navy",
+    "name": "Тёмно-синий",
+    "hex": "#23304A"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/teniska-temno-sinyaya.jpg",
+  "source": "photo_2026-09-22_18-38-08.jpg"
+ },
+ {
+  "sku": "TP-006",
+  "slug": "teniska-polo-chernaya",
+  "name": "Тениска-поло чёрная",
+  "subcategory": "Тениска",
+  "mannequinSlot": "TOP",
+  "sizeType": "LETTER",
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL"
+  ],
+  "sizesStated": true,
+  "price": 250,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "black",
+    "name": "Чёрный",
+    "hex": "#1A1A1A"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/teniska-polo-chernaya.jpg",
+  "source": "photo_2026-09-22_18-38-12.jpg"
+ },
+ {
+  "sku": "TP-007",
+  "slug": "teniska-polo-belaya",
+  "name": "Тениска-поло белая",
+  "subcategory": "Тениска",
+  "mannequinSlot": "TOP",
+  "sizeType": "LETTER",
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL"
+  ],
+  "sizesStated": true,
+  "price": 250,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "cream",
+    "name": "Кремовый",
+    "hex": "#EBE3D2"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/teniska-polo-belaya.jpg",
+  "source": "photo_2026-09-22_18-38-16.jpg"
+ },
+ {
+  "sku": "TP-008",
+  "slug": "teniska-bezhevaya-belaya",
+  "name": "Тениска бежевая и белая",
+  "subcategory": "Тениска",
+  "mannequinSlot": "TOP",
+  "sizeType": "LETTER",
+  "sizes": [
+   "M",
+   "L",
+   "XL",
+   "XXL"
+  ],
+  "sizesStated": false,
+  "price": 230,
+  "priceAssumed": true,
+  "brand": null,
+  "colors": [
+   {
+    "key": "beige",
+    "name": "Бежевый",
+    "hex": "#D9C9A8"
+   },
+   {
+    "key": "white",
+    "name": "Белый",
+    "hex": "#F3F1EC"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/teniska-bezhevaya-belaya.jpg",
+  "source": "photo_2026-09-22_18-38-19.jpg"
+ },
+ {
+  "sku": "TP-009",
+  "slug": "teniska-korichnevaya-bezhevaya",
+  "name": "Тениска коричневая и бежевая",
+  "subcategory": "Тениска",
+  "mannequinSlot": "TOP",
+  "sizeType": "LETTER",
+  "sizes": [
+   "M",
+   "L",
+   "XL",
+   "XXL"
+  ],
+  "sizesStated": true,
+  "price": 220,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "brown",
+    "name": "Коричневый",
+    "hex": "#6B4A32"
+   },
+   {
+    "key": "beige",
+    "name": "Бежевый",
+    "hex": "#D9C9A8"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/teniska-korichnevaya-bezhevaya.jpg",
+  "source": "photo_2026-09-22_18-38-23.jpg"
+ },
+ {
+  "sku": "TP-010",
+  "slug": "teniska-chernaya-vyazanaya",
+  "name": "Тениска чёрная вязаная",
+  "subcategory": "Тениска",
+  "mannequinSlot": "TOP",
+  "sizeType": "LETTER",
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL"
+  ],
+  "sizesStated": true,
+  "price": 230,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "black",
+    "name": "Чёрный",
+    "hex": "#1A1A1A"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/teniska-chernaya-vyazanaya.jpg",
+  "source": "photo_2026-09-22_18-38-26.jpg"
+ },
+ {
+  "sku": "TP-011",
+  "slug": "teniska-chernaya-fakturnaya",
+  "name": "Тениска чёрная фактурная",
+  "subcategory": "Тениска",
+  "mannequinSlot": "TOP",
+  "sizeType": "LETTER",
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL"
+  ],
+  "sizesStated": true,
+  "price": 240,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "black",
+    "name": "Чёрный",
+    "hex": "#1A1A1A"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/teniska-chernaya-fakturnaya.jpg",
+  "source": "photo_2026-09-22_18-38-29.jpg"
+ },
+ {
+  "sku": "SH-001",
+  "slug": "nb-327",
+  "name": "New Balance 327",
+  "subcategory": "Кроссовки",
+  "mannequinSlot": "SHOES",
+  "sizeType": "EU",
+  "sizes": [
+   "39",
+   "40",
+   "44"
+  ],
+  "sizesStated": true,
+  "price": 130,
+  "priceAssumed": false,
+  "brand": "New Balance",
+  "colors": [
+   {
+    "key": "cream",
+    "name": "Кремовый",
+    "hex": "#EBE3D2"
+   },
+   {
+    "key": "green",
+    "name": "Зелёный",
+    "hex": "#2F5D50"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/nb-327.jpg",
+  "source": "photo_2026-09-22_22-44-27.jpg"
+ },
+ {
+  "sku": "SH-002",
+  "slug": "on-roger",
+  "name": "On Roger",
+  "subcategory": "Кроссовки",
+  "mannequinSlot": "SHOES",
+  "sizeType": "EU",
+  "sizes": [
+   "41",
+   "42",
+   "43",
+   "44",
+   "45"
+  ],
+  "sizesStated": true,
+  "price": 200,
+  "priceAssumed": false,
+  "brand": "On",
+  "colors": [
+   {
+    "key": "white",
+    "name": "Белый",
+    "hex": "#F3F1EC"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/on-roger.jpg",
+  "source": "photo_2026-09-22_22-44-31.jpg"
+ },
+ {
+  "sku": "SH-003",
+  "slug": "nb-530",
+  "name": "New Balance 530",
+  "subcategory": "Кроссовки",
+  "mannequinSlot": "SHOES",
+  "sizeType": "EU",
+  "sizes": [
+   "39",
+   "40",
+   "41",
+   "42",
+   "44"
+  ],
+  "sizesStated": true,
+  "price": 200,
+  "priceAssumed": false,
+  "brand": "New Balance",
+  "colors": [
+   {
+    "key": "lgrey",
+    "name": "Светло-серый",
+    "hex": "#C6C6C6"
+   },
+   {
+    "key": "beige",
+    "name": "Бежевый",
+    "hex": "#D9C9A8"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/nb-530.jpg",
+  "source": "photo_2026-09-22_22-44-34.jpg"
+ },
+ {
+  "sku": "SH-004",
+  "slug": "cactus-bandana",
+  "name": "Cactus Bandana",
+  "subcategory": "Кроссовки",
+  "mannequinSlot": "SHOES",
+  "sizeType": "EU",
+  "sizes": [
+   "41",
+   "42"
+  ],
+  "sizesStated": true,
+  "price": 150,
+  "priceAssumed": false,
+  "brand": null,
+  "colors": [
+   {
+    "key": "navy",
+    "name": "Тёмно-синий",
+    "hex": "#23304A"
+   },
+   {
+    "key": "beige",
+    "name": "Бежевый",
+    "hex": "#D9C9A8"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/cactus-bandana.jpg",
+  "source": "photo_2026-09-22_22-44-37.jpg"
+ },
+ {
+  "sku": "SH-005",
+  "slug": "nike-dunk-cacao",
+  "name": "Nike Dunk Cacao",
+  "subcategory": "Кроссовки",
+  "mannequinSlot": "SHOES",
+  "sizeType": "EU",
+  "sizes": [
+   "38",
+   "39",
+   "41",
+   "44"
+  ],
+  "sizesStated": true,
+  "price": 180,
+  "priceAssumed": false,
+  "brand": "Nike",
+  "colors": [
+   {
+    "key": "brown",
+    "name": "Коричневый",
+    "hex": "#6B4A32"
+   },
+   {
+    "key": "white",
+    "name": "Белый",
+    "hex": "#F3F1EC"
+   }
+  ],
+  "sizeNote": "Чуть маломерят",
+  "image": "products/nike-dunk-cacao.jpg",
+  "source": "photo_2026-09-22_22-44-41.jpg"
+ },
+ {
+  "sku": "SH-006",
+  "slug": "nike-cortez",
+  "name": "Nike Cortez",
+  "subcategory": "Кроссовки",
+  "mannequinSlot": "SHOES",
+  "sizeType": "EU",
+  "sizes": [
+   "38",
+   "39",
+   "40",
+   "42",
+   "44"
+  ],
+  "sizesStated": true,
+  "price": 180,
+  "priceAssumed": false,
+  "brand": "Nike",
+  "colors": [
+   {
+    "key": "white",
+    "name": "Белый",
+    "hex": "#F3F1EC"
+   },
+   {
+    "key": "red",
+    "name": "Красный",
+    "hex": "#B3261E"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/nike-cortez.jpg",
+  "source": "photo_2026-09-22_22-44-43.jpg"
+ },
+ {
+  "sku": "SH-007",
+  "slug": "adidas-forum",
+  "name": "Adidas Forum",
+  "subcategory": "Кроссовки",
+  "mannequinSlot": "SHOES",
+  "sizeType": "EU",
+  "sizes": [
+   "40"
+  ],
+  "sizesStated": true,
+  "price": 200,
+  "priceAssumed": false,
+  "brand": "Adidas",
+  "colors": [
+   {
+    "key": "white",
+    "name": "Белый",
+    "hex": "#F3F1EC"
+   },
+   {
+    "key": "black",
+    "name": "Чёрный",
+    "hex": "#1A1A1A"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/adidas-forum.jpg",
+  "source": "photo_2026-09-22_22-44-49.jpg"
+ },
+ {
+  "sku": "SH-008",
+  "slug": "adidas-forum-bad-bunny",
+  "name": "Adidas Forum Bad Bunny",
+  "subcategory": "Кроссовки",
+  "mannequinSlot": "SHOES",
+  "sizeType": "EU",
+  "sizes": [
+   "43"
+  ],
+  "sizesStated": true,
+  "price": 140,
+  "priceAssumed": false,
+  "brand": "Adidas",
+  "colors": [
+   {
+    "key": "beige",
+    "name": "Бежевый",
+    "hex": "#D9C9A8"
+   },
+   {
+    "key": "brown",
+    "name": "Коричневый",
+    "hex": "#6B4A32"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/adidas-forum-bad-bunny.jpg",
+  "source": "photo_2026-09-22_22-44-52.jpg"
+ },
+ {
+  "sku": "SH-009",
+  "slug": "adidas-gazelle",
+  "name": "Adidas Gazelle",
+  "subcategory": "Кроссовки",
+  "mannequinSlot": "SHOES",
+  "sizeType": "EU",
+  "sizes": [
+   "40",
+   "41",
+   "42",
+   "43",
+   "44"
+  ],
+  "sizesStated": true,
+  "price": 200,
+  "priceAssumed": false,
+  "brand": "Adidas",
+  "colors": [
+   {
+    "key": "red",
+    "name": "Красный",
+    "hex": "#B3261E"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/adidas-gazelle.jpg",
+  "source": "photo_2026-09-22_22-44-55.jpg"
+ },
+ {
+  "sku": "SH-010",
+  "slug": "nike-air-force-1",
+  "name": "Nike Air Force 1",
+  "subcategory": "Кроссовки",
+  "mannequinSlot": "SHOES",
+  "sizeType": "EU",
+  "sizes": [
+   "44"
+  ],
+  "sizesStated": true,
+  "price": 150,
+  "priceAssumed": false,
+  "brand": "Nike",
+  "colors": [
+   {
+    "key": "beige",
+    "name": "Бежевый",
+    "hex": "#D9C9A8"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/nike-air-force-1.jpg",
+  "source": "photo_2026-09-22_22-44-58.jpg"
+ },
+ {
+  "sku": "SH-011",
+  "slug": "bape-sta",
+  "name": "Bape Sta",
+  "subcategory": "Кроссовки",
+  "mannequinSlot": "SHOES",
+  "sizeType": "EU",
+  "sizes": [
+   "40"
+  ],
+  "sizesStated": true,
+  "price": 200,
+  "priceAssumed": false,
+  "brand": "Bape",
+  "colors": [
+   {
+    "key": "silver",
+    "name": "Серебристый",
+    "hex": "#BFC3C7"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/bape-sta.jpg",
+  "source": "photo_2026-09-22_22-45-02.jpg"
+ },
+ {
+  "sku": "SH-012",
+  "slug": "nb-550",
+  "name": "New Balance 550",
+  "subcategory": "Кеды",
+  "mannequinSlot": "SHOES",
+  "sizeType": "EU",
+  "sizes": [
+   "39"
+  ],
+  "sizesStated": true,
+  "price": 150,
+  "priceAssumed": false,
+  "brand": "New Balance",
+  "colors": [
+   {
+    "key": "white",
+    "name": "Белый",
+    "hex": "#F3F1EC"
+   },
+   {
+    "key": "green",
+    "name": "Зелёный",
+    "hex": "#2F5D50"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/nb-550.jpg",
+  "source": "photo_2026-09-22_22-45-05.jpg"
+ },
+ {
+  "sku": "SH-013",
+  "slug": "converse-chuck-taylor",
+  "name": "Converse Chuck Taylor",
+  "subcategory": "Кеды",
+  "mannequinSlot": "SHOES",
+  "sizeType": "EU",
+  "sizes": [
+   "38"
+  ],
+  "sizesStated": true,
+  "price": 140,
+  "priceAssumed": false,
+  "brand": "Converse",
+  "colors": [
+   {
+    "key": "black",
+    "name": "Чёрный",
+    "hex": "#1A1A1A"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/converse-chuck-taylor.jpg",
+  "source": "photo_2026-09-22_22-45-08.jpg"
+ },
+ {
+  "sku": "HD-001",
+  "slug": "shapki-vyazanye",
+  "name": "Шапки вязаные",
+  "subcategory": "Шапки",
+  "mannequinSlot": "HEADWEAR",
+  "sizeType": "LETTER",
+  "sizes": [
+   "ONE"
+  ],
+  "sizesStated": true,
+  "price": 150,
+  "priceAssumed": true,
+  "brand": null,
+  "colors": [
+   {
+    "key": "cream",
+    "name": "Кремовый",
+    "hex": "#EBE3D2"
+   },
+   {
+    "key": "red",
+    "name": "Красный",
+    "hex": "#B3261E"
+   },
+   {
+    "key": "black",
+    "name": "Чёрный",
+    "hex": "#1A1A1A"
+   },
+   {
+    "key": "navy",
+    "name": "Тёмно-синий",
+    "hex": "#23304A"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/shapki-vyazanye.jpg",
+  "source": "photo_2026-09-22_22-45-11.jpg"
+ },
+ {
+  "sku": "HD-002",
+  "slug": "shapki-vyazanye-melanzh",
+  "name": "Шапки вязаные меланж",
+  "subcategory": "Шапки",
+  "mannequinSlot": "HEADWEAR",
+  "sizeType": "LETTER",
+  "sizes": [
+   "ONE"
+  ],
+  "sizesStated": true,
+  "price": 150,
+  "priceAssumed": true,
+  "brand": null,
+  "colors": [
+   {
+    "key": "grey",
+    "name": "Серый",
+    "hex": "#9A9A9A"
+   },
+   {
+    "key": "burgundy",
+    "name": "Бордовый",
+    "hex": "#5C1F27"
+   },
+   {
+    "key": "black",
+    "name": "Чёрный",
+    "hex": "#1A1A1A"
+   },
+   {
+    "key": "cream",
+    "name": "Кремовый",
+    "hex": "#EBE3D2"
+   },
+   {
+    "key": "lgrey",
+    "name": "Светло-серый",
+    "hex": "#C6C6C6"
+   },
+   {
+    "key": "beige",
+    "name": "Бежевый",
+    "hex": "#D9C9A8"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/shapki-vyazanye-melanzh.jpg",
+  "source": "photo_2026-09-22_22-45-14.jpg"
+ },
+ {
+  "sku": "HD-003",
+  "slug": "kepki-klassicheskie",
+  "name": "Кепки классические",
+  "subcategory": "Кепки",
+  "mannequinSlot": "HEADWEAR",
+  "sizeType": "LETTER",
+  "sizes": [
+   "ONE"
+  ],
+  "sizesStated": true,
+  "price": 140,
+  "priceAssumed": true,
+  "brand": null,
+  "colors": [
+   {
+    "key": "white",
+    "name": "Белый",
+    "hex": "#F3F1EC"
+   },
+   {
+    "key": "purple",
+    "name": "Фиолетовый",
+    "hex": "#7C5AC0"
+   },
+   {
+    "key": "navy",
+    "name": "Тёмно-синий",
+    "hex": "#23304A"
+   },
+   {
+    "key": "black",
+    "name": "Чёрный",
+    "hex": "#1A1A1A"
+   },
+   {
+    "key": "pink",
+    "name": "Розовый",
+    "hex": "#D1436A"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/kepki-klassicheskie.jpg",
+  "source": "photo_2026-09-22_22-45-17.jpg"
+ },
+ {
+  "sku": "HD-004",
+  "slug": "kepka-bezhevaya",
+  "name": "Кепка бежевая",
+  "subcategory": "Кепки",
+  "mannequinSlot": "HEADWEAR",
+  "sizeType": "LETTER",
+  "sizes": [
+   "ONE"
+  ],
+  "sizesStated": true,
+  "price": 160,
+  "priceAssumed": true,
+  "brand": null,
+  "colors": [
+   {
+    "key": "cream",
+    "name": "Кремовый",
+    "hex": "#EBE3D2"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/kepka-bezhevaya.jpg",
+  "source": "photo_2026-09-22_22-45-21.jpg"
+ },
+ {
+  "sku": "HD-005",
+  "slug": "kepka-chernaya",
+  "name": "Кепка чёрная",
+  "subcategory": "Кепки",
+  "mannequinSlot": "HEADWEAR",
+  "sizeType": "LETTER",
+  "sizes": [
+   "ONE"
+  ],
+  "sizesStated": true,
+  "price": 160,
+  "priceAssumed": true,
+  "brand": null,
+  "colors": [
+   {
+    "key": "black",
+    "name": "Чёрный",
+    "hex": "#1A1A1A"
+   }
+  ],
+  "sizeNote": null,
+  "image": "products/kepka-chernaya.jpg",
+  "source": "photo_2026-09-22_22-45-25.jpg"
+ }
+]

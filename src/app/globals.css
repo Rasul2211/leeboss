@@ -1,0 +1,78 @@
+@import 'tailwindcss';
+
+/*
+  Brand palette.
+  --brand-red was sampled pixel-by-pixel from the LEEBOSS logo badge (#790505):
+  a deep burgundy, not a bright red. Everything else is built around it.
+*/
+@theme {
+  --color-brand: #790505;
+  --color-brand-hover: #8e0a0a;
+  --color-brand-soft: #f6eaea;
+
+  --color-ink: #111111;
+  --color-ink-muted: #6b6b6b;
+  --color-ink-faint: #9b9b9b;
+
+  --color-line: #e7e5e2;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f7f6f4;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-logo: var(--font-archivo), 'Arial Black', sans-serif;
+
+  --radius-card: 0.75rem;
+
+  /* catalogue photos are produced at 900x1200 */
+  --aspect-product: 3 / 4;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-surface);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* keyboard focus must stay visible: the brand colour doubles as the focus ring */
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--color-brand);
+    color: #fff;
+  }
+}
+
+@layer utilities {
+  /* tabular figures keep prices from jittering inside a grid */
+  .price-figures {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+
+  .hide-scrollbar {
+    scrollbar-width: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

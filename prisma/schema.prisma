@@ -1,0 +1,464 @@
+// LEEBOSS.TJ - data model
+//
+// Conventions
+//   * money is stored in whole somoni (Int). Tajik retail has no fractional pricing,
+//     so Int avoids every float rounding problem at checkout.
+//   * anything an employee may edit is a row, not a constant: delivery zones,
+//     pickup points and testimonials all live here so the admin panel can own them.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------- people
+
+enum Role {
+  ADMIN
+  EMPLOYEE
+  CUSTOMER
+}
+
+enum Permission {
+  ORDERS_VIEW
+  ORDERS_MANAGE
+  PRODUCTS_VIEW
+  PRODUCTS_MANAGE
+  PRICING_MANAGE
+  STOCK_MANAGE
+  CATEGORIES_MANAGE
+  LOOKS_MANAGE
+  CUSTOMERS_VIEW
+  ANALYTICS_VIEW
+  EMPLOYEES_MANAGE
+  SETTINGS_MANAGE
+}
+
+model User {
+  id           String   @id @default(cuid())
+  // +992XXXXXXXXX, stored normalised without spaces so lookups are exact
+  phone        String   @unique
+  passwordHash String?
+  telegramId   String?  @unique
+  name         String
+  role         Role     @default(CUSTOMER)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  permissions     EmployeePermission[]
+  addresses       Address[]
+  favorites       Favorite[]
+  looks           Look[]
+  carts           Cart[]
+  orders          Order[]
+  reviews         Review[]
+  mannequinPreset MannequinPreset?
+  statusChanges   OrderStatusEvent[]  @relation("ChangedBy")
+
+  @@index([role])
+}
+
+model EmployeePermission {
+  id         String     @id @default(cuid())
+  userId     String
+  permission Permission
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, permission])
+}
+
+model Address {
+  id        String  @id @default(cuid())
+  userId    String
+  label     String?
+  city      String
+  street    String
+  flat      String?
+  comment   String?
+  isDefault Boolean @default(false)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// ---------------------------------------------------------------- catalogue
+
+// Where a garment goes on the mannequin. One item per slot, except ACCESSORY.
+enum MannequinSlot {
+  HEADWEAR
+  TOP
+  OUTERWEAR
+  BOTTOM
+  SHOES
+  ACCESSORY
+}
+
+// Clothing runs S..XXL, footwear runs EU 38..45. Mixing them breaks the size filter.
+enum SizeType {
+  LETTER
+  EU
+  ONE_SIZE
+}
+
+// How the garment sits on the body - drives the procedural mesh offset.
+enum FitType {
+  SLIM
+  REGULAR
+  OVERSIZE
+}
+
+model Category {
+  id            String        @id @default(cuid())
+  slug          String        @unique
+  name          String
+  sizeType      SizeType      @default(LETTER)
+  mannequinSlot MannequinSlot
+  sortOrder     Int           @default(0)
+  isActive      Boolean       @default(true)
+
+  parentId String?
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryTree")
+
+  products Product[]
+
+  @@index([parentId])
+  @@index([mannequinSlot])
+}
+
+model Product {
+  id          String  @id @default(cuid())
+  sku         String  @unique
+  slug        String  @unique
+  name        String
+  description String?
+  brand       String?
+
+  price     Int // somoni
+  salePrice Int? // set only when the shop runs a discount; the card shows one price
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  mannequinSlot MannequinSlot
+  fitType       FitType       @default(REGULAR)
+
+  // composition and care are left empty on purpose: the source photos do not
+  // state them and inventing them would mislead the buyer
+  material String?
+  care     String?
+  sizeNote String? // e.g. "чуть маломерят"
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  images    ProductImage[]
+  colors    ProductColor[]
+  variants  ProductVariant[]
+  favorites Favorite[]
+  lookItems LookItem[]
+  reviews   Review[]
+  orderRows OrderItem[]
+
+  @@index([categoryId])
+  @@index([mannequinSlot])
+  @@index([isActive, createdAt])
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  url       String
+  alt       String?
+  sortOrder Int     @default(0)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model ProductColor {
+  id        String  @id @default(cuid())
+  productId String
+  key       String // stable machine key, e.g. "navy"
+  name      String // shown to the buyer, e.g. "Тёмно-синий"
+  hex       String // also feeds the 3D mesh material
+  sortOrder Int     @default(0)
+
+  product  Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  variants ProductVariant[]
+
+  @@unique([productId, key])
+}
+
+// Stock lives per colour AND size - that is the only combination a buyer can actually order.
+model ProductVariant {
+  id        String @id @default(cuid())
+  productId String
+  colorId   String
+  size      String
+  stock     Int    @default(0)
+
+  product Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  color   ProductColor @relation(fields: [colorId], references: [id], onDelete: Cascade)
+
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+
+  @@unique([productId, colorId, size])
+  @@index([productId])
+}
+
+// ---------------------------------------------------------------- fitting room
+
+enum Build {
+  SLIM
+  AVERAGE
+  ATHLETIC
+  HEAVY
+}
+
+model MannequinPreset {
+  id     String @id @default(cuid())
+  userId String @unique
+  height Int    @default(178) // cm, 160..200
+  weight Int    @default(75) // kg, 45..150
+  build  Build  @default(AVERAGE)
+  size   String @default("M")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Look {
+  id        String   @id @default(cuid())
+  userId    String?
+  name      String
+  isPublic  Boolean  @default(false) // curated looks shown on the home page
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items LookItem[]
+
+  @@index([userId])
+  @@index([isPublic])
+}
+
+model LookItem {
+  id        String        @id @default(cuid())
+  lookId    String
+  productId String
+  slot      MannequinSlot
+  colorKey  String?
+
+  look    Look    @relation(fields: [lookId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([lookId])
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
+
+// ---------------------------------------------------------------- cart and orders
+
+model Cart {
+  id        String   @id @default(cuid())
+  userId    String?
+  sessionId String?  @unique // guests keep a cart before signing in
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items CartItem[]
+
+  @@index([userId])
+}
+
+model CartItem {
+  id        String @id @default(cuid())
+  cartId    String
+  variantId String
+  quantity  Int    @default(1)
+
+  cart    Cart           @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  variant ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, variantId])
+}
+
+enum OrderStatus {
+  NEW
+  CONFIRMED
+  PACKING
+  READY_FOR_PICKUP
+  IN_DELIVERY
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH_ON_DELIVERY
+  CARD_DEMO // clearly labelled demo payment - no money moves
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum DeliveryMethod {
+  PICKUP
+  COURIER_DUSHANBE
+  REGIONAL
+}
+
+model Order {
+  id     String @id @default(cuid())
+  number String @unique // human readable, e.g. LB-000123
+  userId String?
+
+  status        OrderStatus   @default(NEW)
+  paymentMethod PaymentMethod
+  paymentStatus PaymentStatus @default(PENDING)
+
+  deliveryMethod DeliveryMethod
+  deliveryZoneId String?
+  pickupPointId  String?
+  city           String?
+  address        String?
+
+  // contact details are copied onto the order so later profile edits
+  // never rewrite the history of a shipped order
+  customerName  String
+  customerPhone String
+  comment       String?
+
+  subtotal     Int
+  deliveryCost Int
+  total        Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user        User?              @relation(fields: [userId], references: [id])
+  zone        DeliveryZone?      @relation(fields: [deliveryZoneId], references: [id])
+  pickupPoint PickupPoint?       @relation(fields: [pickupPointId], references: [id])
+  items       OrderItem[]
+  events      OrderStatusEvent[]
+  reviews     Review[]
+
+  @@index([userId])
+  @@index([status, createdAt])
+}
+
+model OrderItem {
+  id        String @id @default(cuid())
+  orderId   String
+  productId String
+  variantId String
+
+  // frozen copies: the card must still read correctly if the product is renamed or deleted
+  name      String
+  size      String
+  colorName String
+  price     Int
+  quantity  Int
+
+  order   Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product        @relation(fields: [productId], references: [id])
+  variant ProductVariant @relation(fields: [variantId], references: [id])
+
+  @@index([orderId])
+}
+
+model OrderStatusEvent {
+  id        String      @id @default(cuid())
+  orderId   String
+  status    OrderStatus
+  byUserId  String?
+  note      String?
+  createdAt DateTime    @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  by    User? @relation("ChangedBy", fields: [byUserId], references: [id])
+
+  @@index([orderId])
+}
+
+// ---------------------------------------------------------------- delivery
+
+model DeliveryZone {
+  id            String  @id @default(cuid())
+  city          String  @unique
+  cost          Int
+  freeThreshold Int? // free above this order total
+  daysMin       Int
+  daysMax       Int
+  isActive      Boolean @default(true)
+
+  orders Order[]
+}
+
+model PickupPoint {
+  id        String  @id @default(cuid())
+  name      String
+  address   String
+  hoursFrom String
+  hoursTo   String
+  isActive  Boolean @default(true)
+
+  orders Order[]
+}
+
+// ---------------------------------------------------------------- social proof
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// Only a buyer with a COMPLETED order containing this product may post one.
+model Review {
+  id        String       @id @default(cuid())
+  productId String
+  userId    String
+  orderId   String
+  rating    Int // 1..5
+  text      String
+  status    ReviewStatus @default(PENDING)
+  createdAt DateTime     @default(now())
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, userId, orderId])
+  @@index([productId, status])
+}
+
+// Shop-level testimonials shown on the home page, editable in the admin panel.
+model Testimonial {
+  id          String  @id @default(cuid())
+  authorName  String
+  text        String
+  sortOrder   Int     @default(0)
+  isPublished Boolean @default(true)
+}

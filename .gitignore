@@ -1,0 +1,20 @@
+node_modules/
+.next/
+out/
+build/
+.env
+.env.local
+*.tsbuildinfo
+next-env.d.ts
+
+# local toolchain and photo working files, not part of the app
+_tools/
+_assets/raw/
+_assets/work/
+_assets/*.jpg
+
+# generated migration baseline is kept; local Prisma engine cache is not
+prisma/dev.db*
+
+# byte-identical to public/products; regenerate with _assets/catalog.py
+_assets/catalog/images/
