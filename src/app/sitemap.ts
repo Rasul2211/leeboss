@@ -4,6 +4,17 @@ import { prisma } from '@/lib/prisma';
 const BASE = 'https://leeboss.tj';
 
 /**
+ * Built on request, not at build time.
+ *
+ * Next prerenders routes in parallel workers, and a sitemap that queries the
+ * catalogue makes the whole build depend on the database being reachable and
+ * on the pool surviving that burst. Crawlers fetch this a few times a day, so
+ * generating it per request costs nothing and takes the database off the
+ * critical path of every deploy.
+ */
+export const dynamic = 'force-dynamic';
+
+/**
  * Only pages worth indexing are listed: the account area, the staff panels,
  * the cart and checkout are private or per-visitor and are marked noindex in
  * their own metadata.
