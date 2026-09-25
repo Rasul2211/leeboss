@@ -12,7 +12,11 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  // Runtime queries go through a connection pooler on hosted Postgres.
   url      = env("DATABASE_URL")
+  // Migrations need a real session, which a pooler in transaction mode cannot
+  // give. Falls back to the pooled URL locally, where there is no pooler.
+  directUrl = env("DIRECT_URL")
 }
 
 // ---------------------------------------------------------------- people

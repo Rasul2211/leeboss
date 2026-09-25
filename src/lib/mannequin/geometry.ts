@@ -4,14 +4,19 @@ import type { Ring } from '@/lib/mannequin/measurements';
 /**
  * Lofting helpers.
  *
- * A body part is described by a handful of elliptical cross-sections stacked up
- * the y axis. These functions interpolate between them and weave the result
- * into a mesh, which is what lets the figure change shape smoothly when a
- * slider moves: the rings move, the surface follows.
+ * A body part is described by elliptical cross-sections stacked up the y axis.
+ * These functions interpolate between them and weave the result into a mesh,
+ * which is what lets the figure change shape smoothly when a slider moves: the
+ * rings move, the surface follows.
+ *
+ * Each ring may also sit off the central axis (cx, cz). Real anatomy is not
+ * centred on one line - the head is ahead of the spine, the seat behind it, the
+ * calf behind the shin - and without that offset every silhouette is flat in
+ * profile.
  */
 
-const RADIAL_SEGMENTS = 48;
-const VERTICAL_STEPS = 36;
+const RADIAL_SEGMENTS = 64;
+const VERTICAL_STEPS = 56;
 
 /**
  * Monotone cubic interpolation (Fritsch-Carlson).
@@ -20,6 +25,8 @@ const VERTICAL_STEPS = 36;
  */
 function monotoneSpline(xs: number[], ys: number[]): (x: number) => number {
   const n = xs.length;
+  if (n === 1) return () => ys[0]!;
+
   const slopes: number[] = [];
   for (let i = 0; i < n - 1; i++) {
     slopes.push((ys[i + 1]! - ys[i]!) / (xs[i + 1]! - xs[i]!));
@@ -55,6 +62,28 @@ function monotoneSpline(xs: number[], ys: number[]): (x: number) => number {
   };
 }
 
+type Profile = {
+  yMin: number;
+  yMax: number;
+  rx: (y: number) => number;
+  rz: (y: number) => number;
+  cx: (y: number) => number;
+  cz: (y: number) => number;
+};
+
+function profileOf(rings: Ring[]): Profile {
+  const sorted = [...rings].sort((a, b) => a.y - b.y);
+  const ys = sorted.map((r) => r.y);
+  return {
+    yMin: ys[0]!,
+    yMax: ys[ys.length - 1]!,
+    rx: monotoneSpline(ys, sorted.map((r) => r.rx)),
+    rz: monotoneSpline(ys, sorted.map((r) => r.rz)),
+    cx: monotoneSpline(ys, sorted.map((r) => r.cx ?? 0)),
+    cz: monotoneSpline(ys, sorted.map((r) => r.cz ?? 0)),
+  };
+}
+
 export type LoftOptions = {
   radialSegments?: number;
   verticalSteps?: number;
@@ -63,7 +92,7 @@ export type LoftOptions = {
   capTop?: boolean;
   /**
    * 2 is a plain ellipse; higher values square the cross-section off, which is
-   * what gives a shop mannequin its slightly flattened chest and back.
+   * what gives a torso its slightly flattened chest and back.
    */
   squareness?: number;
 };
@@ -77,14 +106,7 @@ export function loft(rings: Ring[], options: LoftOptions = {}): THREE.BufferGeom
     squareness = 2,
   } = options;
 
-  const sorted = [...rings].sort((a, b) => a.y - b.y);
-  const ys = sorted.map((r) => r.y);
-  const fx = monotoneSpline(ys, sorted.map((r) => r.rx));
-  const fz = monotoneSpline(ys, sorted.map((r) => r.rz));
-
-  const yMin = ys[0]!;
-  const yMax = ys[ys.length - 1]!;
-
+  const p = profileOf(rings);
   const positions: number[] = [];
   const uvs: number[] = [];
   const indices: number[] = [];
@@ -92,13 +114,24 @@ export function loft(rings: Ring[], options: LoftOptions = {}): THREE.BufferGeom
   const rowCount = verticalSteps + 1;
   const colCount = radialSegments + 1;
 
+  // precompute the ring shape once: it is the same at every height
+  const shape: { c: number; s: number }[] = [];
+  for (let col = 0; col < colCount; col++) {
+    const angle = (col / radialSegments) * Math.PI * 2;
+    const c = Math.cos(angle);
+    const s = Math.sin(angle);
+    const bend = (t: number) => Math.sign(t) * Math.pow(Math.abs(t), 2 / squareness);
+    shape.push({ c: bend(c), s: bend(s) });
+  }
+
   for (let row = 0; row < rowCount; row++) {
     const v = row / verticalSteps;
-    const y = yMin + (yMax - yMin) * v;
-    let rx = fx(y);
-    let rz = fz(y);
+    const y = p.yMin + (p.yMax - p.yMin) * v;
 
-    // shrink the last ring towards the axis so a cap closes into a dome
+    let rx = p.rx(y);
+    let rz = p.rz(y);
+
+    // ease the last ring towards the axis so a cap closes into a dome
     if (capBottom && row === 0) {
       rx *= 0.001;
       rz *= 0.001;
@@ -108,17 +141,13 @@ export function loft(rings: Ring[], options: LoftOptions = {}): THREE.BufferGeom
       rz *= 0.001;
     }
 
+    const cx = p.cx(y);
+    const cz = p.cz(y);
+
     for (let col = 0; col < colCount; col++) {
-      const u = col / radialSegments;
-      const angle = u * Math.PI * 2;
-      const c = Math.cos(angle);
-      const s = Math.sin(angle);
-
-      // superellipse: |x/a|^n + |z/b|^n = 1
-      const shape = (t: number) => Math.sign(t) * Math.pow(Math.abs(t), 2 / squareness);
-
-      positions.push(rx * shape(c), y, rz * shape(s));
-      uvs.push(u, v);
+      const { c, s } = shape[col]!;
+      positions.push(cx + rx * c, y, cz + rz * s);
+      uvs.push(col / radialSegments, v);
     }
   }
 
@@ -140,38 +169,31 @@ export function loft(rings: Ring[], options: LoftOptions = {}): THREE.BufferGeom
 
 /** Pushes every ring outward - how a garment sits away from the skin. */
 export function offsetRings(rings: Ring[], offset: number, scale = 1): Ring[] {
-  return rings.map((r) => ({ y: r.y, rx: r.rx * scale + offset, rz: r.rz * scale + offset }));
+  return rings.map((r) => ({
+    ...r,
+    rx: r.rx * scale + offset,
+    rz: r.rz * scale + offset,
+  }));
+}
+
+/** Shifts a whole profile forward or back along z. */
+export function shiftRings(rings: Ring[], dz: number): Ring[] {
+  return rings.map((r) => ({ ...r, cz: (r.cz ?? 0) + dz }));
 }
 
 /**
- * Cuts the profile down to a vertical band, interpolating the radii at the two
- * new edges so a hem lands exactly where it should rather than at the nearest
- * original ring.
+ * Cuts the profile down to a vertical band, interpolating at the two new edges
+ * so a hem lands exactly where it should rather than at the nearest ring.
  */
 export function sliceRings(rings: Ring[], yMin: number, yMax: number): Ring[] {
-  const sorted = [...rings].sort((a, b) => a.y - b.y);
-  const ys = sorted.map((r) => r.y);
-  const fx = monotoneSpline(ys, sorted.map((r) => r.rx));
-  const fz = monotoneSpline(ys, sorted.map((r) => r.rz));
-
-  const inside = sorted.filter((r) => r.y > yMin && r.y < yMax);
-  return [
-    { y: yMin, rx: fx(yMin), rz: fz(yMin) },
-    ...inside,
-    { y: yMax, rx: fx(yMax), rz: fz(yMax) },
-  ];
+  const p = profileOf(rings);
+  const inside = [...rings].sort((a, b) => a.y - b.y).filter((r) => r.y > yMin && r.y < yMax);
+  const edge = (y: number): Ring => ({ y, rx: p.rx(y), rz: p.rz(y), cx: p.cx(y), cz: p.cz(y) });
+  return [edge(yMin), ...inside, edge(yMax)];
 }
 
 /** Radius of a profile at a given height, for placing collars, cuffs and hems. */
 export function radiusAt(rings: Ring[], y: number): { rx: number; rz: number } {
-  const sorted = [...rings].sort((a, b) => a.y - b.y);
-  const ys = sorted.map((r) => r.y);
-  return {
-    rx: monotoneSpline(ys, sorted.map((r) => r.rx))(y),
-    rz: monotoneSpline(ys, sorted.map((r) => r.rz))(y),
-  };
-}
-
-export function disposeGeometry(geometry: THREE.BufferGeometry | null | undefined) {
-  geometry?.dispose();
+  const p = profileOf(rings);
+  return { rx: p.rx(y), rz: p.rz(y) };
 }
