@@ -108,29 +108,24 @@ function fitFor(slug: string): FitType {
   return FitType.REGULAR;
 }
 
+/**
+ * Empty every table in one statement.
+ *
+ * Twenty separate deleteMany calls means twenty round trips, and against a
+ * database on another continent that is both slow and fragile - a hosted
+ * Postgres will drop the connection part way through. TRUNCATE ... CASCADE
+ * does the same job atomically in a single trip and ignores row order.
+ */
 async function reset() {
-  // order matters: children before parents
-  await prisma.orderStatusEvent.deleteMany();
-  await prisma.orderItem.deleteMany();
-  await prisma.review.deleteMany();
-  await prisma.order.deleteMany();
-  await prisma.cartItem.deleteMany();
-  await prisma.cart.deleteMany();
-  await prisma.lookItem.deleteMany();
-  await prisma.look.deleteMany();
-  await prisma.favorite.deleteMany();
-  await prisma.productVariant.deleteMany();
-  await prisma.productColor.deleteMany();
-  await prisma.productImage.deleteMany();
-  await prisma.product.deleteMany();
-  await prisma.category.deleteMany();
-  await prisma.mannequinPreset.deleteMany();
-  await prisma.employeePermission.deleteMany();
-  await prisma.address.deleteMany();
-  await prisma.user.deleteMany();
-  await prisma.deliveryZone.deleteMany();
-  await prisma.pickupPoint.deleteMany();
-  await prisma.testimonial.deleteMany();
+  const tables = [
+    'OrderStatusEvent', 'OrderItem', 'Review', 'Order',
+    'CartItem', 'Cart', 'LookItem', 'Look', 'Favorite',
+    'ProductVariant', 'ProductColor', 'ProductImage', 'Product', 'Category',
+    'MannequinPreset', 'EmployeePermission', 'Address', 'User',
+    'DeliveryZone', 'PickupPoint', 'Testimonial',
+  ];
+  const list = tables.map((t) => `"${t}"`).join(', ');
+  await prisma.$executeRawUnsafe(`TRUNCATE TABLE ${list} RESTART IDENTITY CASCADE`);
 }
 
 async function seedCategories() {

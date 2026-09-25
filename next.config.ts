@@ -2,6 +2,9 @@ import type { NextConfig } from 'next';
 
 const config: NextConfig = {
   reactStrictMode: true,
+  // a Cloudflare quick tunnel serves the dev server on a random public
+  // hostname; without this Next refuses its asset requests as cross-origin
+  allowedDevOrigins: ['*.trycloudflare.com'],
   images: {
     // catalogue photos are served from /public, so no remote patterns are needed yet
     formats: ['image/avif', 'image/webp'],
