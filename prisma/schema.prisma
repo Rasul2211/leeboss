@@ -169,6 +169,7 @@ model Product {
   lookItems LookItem[]
   reviews   Review[]
   orderRows OrderItem[]
+  fittingLayers FittingLayer[]
 
   @@index([categoryId])
   @@index([mannequinSlot])
@@ -216,6 +217,57 @@ model ProductVariant {
 
   @@unique([productId, colorId, size])
   @@index([productId])
+}
+
+// ---------------------------------------------------------------- photo fitting
+
+/// Builds a shopper can pick between. Each one is a separate photo shoot.
+enum BodyType {
+  SLIM
+  AVERAGE
+  HEAVY
+}
+
+/// The base photograph: one model, one pose, wearing nothing the garments
+/// will not cover. Every layer for this build is cut from frames shot in the
+/// same session, so they line up pixel for pixel.
+model FittingBody {
+  id       String   @id @default(cuid())
+  bodyType BodyType @unique
+  label    String
+  imageUrl String
+  /// natural pixel size, so the browser can reserve the space before loading
+  width    Int
+  height   Int
+  sortOrder Int     @default(0)
+  isActive Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  layers FittingLayer[]
+}
+
+/// One garment, cut out of a photo of that body wearing it.
+/// Draw order comes from the product's mannequinSlot, so it is not stored twice.
+model FittingLayer {
+  id        String  @id @default(cuid())
+  productId String
+  bodyId    String
+  /// which colour of the product was photographed; empty means the default one.
+  /// Not nullable on purpose: Postgres treats two NULLs as different values,
+  /// so a nullable column here would let the same layer be stored twice.
+  colorKey  String  @default("")
+  imageUrl  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  product Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  body    FittingBody @relation(fields: [bodyId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, bodyId, colorKey])
+  @@index([bodyId])
 }
 
 // ---------------------------------------------------------------- fitting room

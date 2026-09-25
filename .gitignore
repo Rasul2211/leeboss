@@ -22,3 +22,10 @@ _assets/catalog/images/
 # generated production secret, never committed
 .auth-secret.txt
 .env.production
+
+.vercel
+.env*
+
+# working frames from the photo session; only the cut layers are published
+_assets/fitting/
+_assets/_test_extract/

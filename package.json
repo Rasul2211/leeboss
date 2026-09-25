@@ -15,7 +15,10 @@
     "db:push": "prisma db push",
     "db:generate": "prisma generate",
     "db:seed": "tsx prisma/seed.ts",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "fitting:extract": "python _assets/extract_layers.py",
+    "fitting:test": "python _assets/test_extract.py",
+    "fitting:import": "tsx scripts/import-fitting.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -47,7 +50,8 @@
     "prisma": "^6.1.0",
     "tailwindcss": "^4.0.0",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vercel": "^60.0.1"
   },
   "allowScripts": {
     "@prisma/client@6.19.3": true,

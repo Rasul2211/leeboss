@@ -1,16 +1,18 @@
 import type { Metadata } from 'next';
 import { prisma } from '@/lib/prisma';
 import { FittingRoom } from '@/components/fitting/FittingRoom';
+import { PhotoFittingRoom, type LayerIndex } from '@/components/fitting/PhotoFittingRoom';
 import type { FittingProduct } from '@/components/fitting/ItemPicker';
 import type { Slot } from '@/lib/mannequin/garments';
 
 export const metadata: Metadata = {
   title: 'Виртуальная примерочная',
   description:
-    'Настройте манекен под свой рост, вес и телосложение, соберите полный образ из вещей LEEBOSS и добавьте его в корзину одной кнопкой.',
+    'Выберите телосложение, соберите полный образ из вещей LEEBOSS и добавьте его в корзину одной кнопкой.',
 };
 
 type Search = { look?: string; add?: string };
+type Worn = Partial<Record<Slot, { productId: string; colorKey: string }>>;
 
 async function loadProducts(): Promise<FittingProduct[]> {
   const rows = await prisma.product.findMany({
@@ -47,13 +49,10 @@ async function loadProducts(): Promise<FittingProduct[]> {
   }));
 }
 
-export default async function FittingPage({ searchParams }: { searchParams: Promise<Search> }) {
-  const [params, products] = await Promise.all([searchParams, loadProducts()]);
+async function resolveInitial(params: Search, products: FittingProduct[]) {
+  const worn: Worn = {};
+  let slot: Slot = 'TOP';
 
-  const initialWorn: Partial<Record<Slot, { productId: string; colorKey: string }>> = {};
-  let initialSlot: Slot = 'TOP';
-
-  // arriving from a saved look: dress the mannequin before the first paint
   if (params.look) {
     const look = await prisma.look.findUnique({
       where: { id: params.look },
@@ -62,28 +61,82 @@ export default async function FittingPage({ searchParams }: { searchParams: Prom
           select: {
             slot: true,
             colorKey: true,
-            product: { select: { id: true, colors: { select: { key: true }, orderBy: { sortOrder: 'asc' }, take: 1 } } },
+            product: {
+              select: {
+                id: true,
+                colors: { select: { key: true }, orderBy: { sortOrder: 'asc' }, take: 1 },
+              },
+            },
           },
         },
       },
     });
 
     for (const item of look?.items ?? []) {
-      initialWorn[item.slot as Slot] = {
+      worn[item.slot as Slot] = {
         productId: item.product.id,
         colorKey: item.colorKey ?? item.product.colors[0]?.key ?? '',
       };
     }
   }
 
-  // arriving from a product page: put that one item on
   if (params.add) {
     const product = products.find((p) => p.slug === params.add);
     if (product) {
-      initialWorn[product.slot] = { productId: product.id, colorKey: product.colors[0]?.key ?? '' };
-      initialSlot = product.slot;
+      worn[product.slot] = { productId: product.id, colorKey: product.colors[0]?.key ?? '' };
+      slot = product.slot;
     }
   }
 
-  return <FittingRoom products={products} initialWorn={initialWorn} initialSlot={initialSlot} />;
+  return { worn, slot };
+}
+
+export default async function FittingPage({ searchParams }: { searchParams: Promise<Search> }) {
+  const [params, products, bodies] = await Promise.all([
+    searchParams,
+    loadProducts(),
+    prisma.fittingBody.findMany({
+      where: { isActive: true },
+      orderBy: { sortOrder: 'asc' },
+      select: {
+        id: true,
+        bodyType: true,
+        label: true,
+        imageUrl: true,
+        width: true,
+        height: true,
+      },
+    }),
+  ]);
+
+  const { worn, slot } = await resolveInitial(params, products);
+
+  /*
+    Photographs win when there are any, because a real garment on a real body
+    beats anything generated. Until the shoot is done the procedural mannequin
+    stands in, so the room never sits empty and nothing regresses while the
+    photos are being taken.
+  */
+  if (bodies.length === 0) {
+    return <FittingRoom products={products} initialWorn={worn} initialSlot={slot} />;
+  }
+
+  const layerRows = await prisma.fittingLayer.findMany({
+    select: { productId: true, bodyId: true, imageUrl: true },
+  });
+
+  const layers: LayerIndex = {};
+  for (const row of layerRows) {
+    (layers[row.productId] ??= {})[row.bodyId] = row.imageUrl;
+  }
+
+  return (
+    <PhotoFittingRoom
+      bodies={bodies}
+      products={products}
+      layers={layers}
+      initialWorn={worn}
+      initialSlot={slot}
+    />
+  );
 }
