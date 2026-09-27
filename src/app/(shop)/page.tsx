@@ -1,7 +1,6 @@
 import { Hero } from '@/components/home/Hero';
 import { CategoryTiles } from '@/components/home/CategoryTiles';
 import { FittingPromo } from '@/components/home/FittingPromo';
-import { OutfitGallery } from '@/components/home/OutfitGallery';
 import { Advantages } from '@/components/home/Advantages';
 import { Testimonials } from '@/components/home/Testimonials';
 import { LooksSection } from '@/components/home/LooksSection';
@@ -22,7 +21,6 @@ export default async function HomePage() {
   return (
     <>
       <Hero />
-      <OutfitGallery />
       <CategoryTiles />
 
       <Section

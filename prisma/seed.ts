@@ -42,6 +42,7 @@ const PARENTS = [
   { slug: 'obuv', name: 'Обувь', slot: 'SHOES', sizeType: 'EU', order: 3 },
   { slug: 'golovnye-ubory', name: 'Головные уборы', slot: 'HEADWEAR', sizeType: 'ONE_SIZE', order: 4 },
   { slug: 'verhnyaya-odezhda', name: 'Верхняя одежда', slot: 'OUTERWEAR', sizeType: 'LETTER', order: 5 },
+  { slug: 'aksessuary', name: 'Аксессуары', slot: 'ACCESSORY', sizeType: 'ONE_SIZE', order: 6 },
 ] as const;
 
 /** Subcategory label -> its parent and url slug. */
