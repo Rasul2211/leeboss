@@ -5,6 +5,7 @@ import { Shirt } from 'lucide-react';
 import { getPublicLooks } from '@/lib/catalog';
 import { effectivePrice, formatPrice } from '@/lib/money';
 import { Button } from '@/components/ui/button';
+import { OutfitGallery } from '@/components/home/OutfitGallery';
 
 export const metadata: Metadata = {
   title: 'Готовые образы',
@@ -98,6 +99,12 @@ export default async function LooksPage() {
           );
         })}
       </ul>
+
+      <OutfitGallery
+        layout="grid"
+        title="Снято в магазине"
+        description="Готовые сочетания с витрины LEEBOSS — для вдохновения, вещи из них ищите в каталоге."
+      />
     </div>
   );
 }
