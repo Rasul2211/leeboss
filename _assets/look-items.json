@@ -1,0 +1,187 @@
+{
+  "note": "Вещи, снятые в готовых образах LEEBOSS. box — рамка вещи на кадре в процентах [x0,y0,x1,y1]. Цены в сомони, взяты по ценам магазина из подписей к тем же публикациям: футболка 170, тениска 200, рубашка 220, брюки 270-300, джинсы 280, кеды 440, кроссовки 450, лоферы 500, сандалии 330, кепка 160.",
+  "looks": [
+    {
+      "file": "look-01",
+      "name": "Хаки и кремовый деним",
+      "items": [
+        { "slug": "futbolka-haki-print", "name": "Футболка хаки с принтом", "kind": "futbolka", "color": ["haki", "Хаки", "#5a5a46"], "price": 170, "box": [4, 10, 62, 90] },
+        { "slug": "dzhinsy-kremovye-pryamye", "name": "Джинсы кремовые прямые", "kind": "dzhinsy", "color": ["kremovyy", "Кремовый", "#e8e1d3"], "price": 280, "box": [44, 2, 95, 88] },
+        { "slug": "krossovki-belo-korichnevye", "name": "Кроссовки бело-коричневые", "kind": "krossovki", "color": ["belyy", "Белый", "#f2efe9"], "price": 450, "box": [36, 52, 74, 92] }
+      ]
+    },
+    {
+      "file": "look-02",
+      "name": "Белый принт и чёрный деним",
+      "items": [
+        { "slug": "futbolka-belaya-print-zvezda", "name": "Футболка белая с принтом", "kind": "futbolka", "color": ["belyy", "Белый", "#f4f2ee"], "price": 170, "box": [18, 4, 80, 72] },
+        { "slug": "kepka-chernaya-la", "name": "Кепка чёрная с вышивкой", "kind": "kepka", "color": ["chernyy", "Чёрный", "#15151a"], "price": 160, "box": [6, 28, 44, 64] },
+        { "slug": "dzhinsy-chernye-pryamye", "name": "Джинсы чёрные прямые", "kind": "dzhinsy", "color": ["chernyy", "Чёрный", "#1b1b1f"], "price": 280, "box": [62, 0, 100, 58] },
+        { "slug": "kedy-belye-zvezda", "name": "Кеды белые со звездой", "kind": "kedy", "color": ["belyy", "Белый", "#efece4"], "price": 440, "box": [40, 54, 100, 98] }
+      ]
+    },
+    {
+      "file": "look-03",
+      "name": "Молочный принт и тёмный деним",
+      "items": [
+        { "slug": "futbolka-molochnaya-print", "name": "Футболка молочная с принтом", "kind": "futbolka", "color": ["molochnyy", "Молочный", "#ece7dc"], "price": 170, "box": [20, 10, 74, 78] },
+        { "slug": "kepka-bezhevaya-ny", "name": "Кепка бежевая с вышивкой", "kind": "kepka", "color": ["bezhevyy", "Бежевый", "#e2d6b4"], "price": 160, "box": [2, 14, 34, 50] },
+        { "slug": "kedy-belye-perforatsiya", "name": "Кеды белые с перфорацией", "kind": "kedy", "color": ["belyy", "Белый", "#f1eee7"], "price": 440, "box": [38, 55, 82, 95] },
+        { "slug": "dzhinsy-temno-sinie-pryamye", "name": "Джинсы тёмно-синие прямые", "kind": "dzhinsy", "color": ["temno-siniy", "Тёмно-синий", "#25304a"], "price": 280, "box": [64, 2, 100, 72] }
+      ]
+    },
+    {
+      "file": "look-04",
+      "name": "Чёрный монохром",
+      "items": [
+        { "slug": "futbolka-chernaya-zvezdy", "name": "Футболка чёрная со звёздами", "kind": "futbolka", "color": ["chernyy", "Чёрный", "#16161a"], "price": 170, "box": [16, 28, 64, 90] },
+        { "slug": "kepka-chernaya-ny", "name": "Кепка чёрная классическая", "kind": "kepka", "color": ["chernyy", "Чёрный", "#15151a"], "price": 160, "box": [6, 36, 34, 62] },
+        { "slug": "dzhinsy-chernye-potertye", "name": "Джинсы чёрные потёртые", "kind": "dzhinsy", "color": ["chernyy", "Чёрный", "#2a2723"], "price": 280, "box": [52, 20, 100, 80] },
+        { "slug": "kedy-chernye-zamsha", "name": "Кеды чёрные замшевые", "kind": "kedy", "color": ["chernyy", "Чёрный", "#17171a"], "price": 440, "box": [58, 54, 98, 92] }
+      ]
+    },
+    {
+      "file": "look-05",
+      "name": "Коричневый лён",
+      "items": [
+        { "slug": "rubashka-korichnevaya-polosa", "name": "Рубашка коричневая в полоску", "kind": "rubashka", "color": ["korichnevyy", "Коричневый", "#a97b4a"], "price": 220, "box": [8, 2, 62, 90] },
+        { "slug": "bryuki-belye-shirokie", "name": "Брюки белые широкие", "kind": "bryuki", "color": ["belyy", "Белый", "#f3f0e8"], "price": 270, "box": [44, 2, 95, 92] },
+        { "slug": "sandalii-zamshevye-korichnevye", "name": "Сандалии замшевые коричневые", "kind": "sandalii", "color": ["korichnevyy", "Коричневый", "#8a6134"], "price": 330, "box": [20, 38, 52, 80] }
+      ]
+    },
+    {
+      "file": "look-06",
+      "name": "Тёмно-синяя полоска",
+      "items": [
+        { "slug": "teniska-temno-sinyaya-polosa", "name": "Тениска тёмно-синяя в полоску", "kind": "teniska", "color": ["temno-siniy", "Тёмно-синий", "#1e2743"], "price": 200, "box": [10, 4, 70, 72] },
+        { "slug": "bryuki-belye-strelki", "name": "Брюки белые со стрелками", "kind": "bryuki", "color": ["belyy", "Белый", "#f4f1ea"], "price": 270, "box": [48, 4, 96, 92] },
+        { "slug": "kedy-temno-sinie-nizkie", "name": "Кеды тёмно-синие низкие", "kind": "kedy", "color": ["temno-siniy", "Тёмно-синий", "#1c2237"], "price": 440, "box": [48, 52, 88, 88] }
+      ]
+    },
+    {
+      "file": "look-07",
+      "name": "Чёрная полоска и молочные брюки",
+      "items": [
+        { "slug": "rubashka-chernaya-polosa", "name": "Рубашка чёрная в полоску", "kind": "rubashka", "color": ["chernyy", "Чёрный", "#191920"], "price": 220, "box": [8, 8, 62, 92] },
+        { "slug": "bryuki-molochnye", "name": "Брюки молочные", "kind": "bryuki", "color": ["molochnyy", "Молочный", "#f0ece1"], "price": 270, "box": [46, 10, 95, 95] },
+        { "slug": "sandalii-zamshevye-bezhevye", "name": "Сандалии замшевые бежевые", "kind": "sandalii", "color": ["bezhevyy", "Бежевый", "#b08f5c"], "price": 330, "box": [18, 40, 50, 85] }
+      ]
+    },
+    {
+      "file": "look-08",
+      "name": "Кремовая полоска и бордовые кроссовки",
+      "items": [
+        { "slug": "teniska-kremovaya-bordo-polosa", "name": "Тениска кремовая в бордовую полоску", "kind": "teniska", "color": ["kremovyy", "Кремовый", "#efe8d8"], "price": 200, "box": [10, 8, 72, 70] },
+        { "slug": "bryuki-bezhevye-klassika", "name": "Брюки бежевые классические", "kind": "bryuki", "color": ["bezhevyy", "Бежевый", "#ddd2ba"], "price": 270, "box": [55, 2, 98, 90] },
+        { "slug": "krossovki-bordo-belye", "name": "Кроссовки бордово-белые", "kind": "krossovki", "color": ["bordovyy", "Бордовый", "#6d2233"], "price": 450, "box": [50, 58, 92, 95] }
+      ]
+    },
+    {
+      "file": "look-09",
+      "name": "Белая рубашка и коричневые брюки",
+      "items": [
+        { "slug": "rubashka-belaya-polosa", "name": "Рубашка белая в полоску", "kind": "rubashka", "color": ["belyy", "Белый", "#f2efe6"], "price": 220, "box": [6, 2, 62, 72] },
+        { "slug": "bryuki-korichnevye-shirokie", "name": "Брюки коричневые широкие", "kind": "bryuki", "color": ["korichnevyy", "Коричневый", "#4a2f24"], "price": 270, "box": [46, 2, 92, 92] },
+        { "slug": "lofery-korichnevye-zamsha", "name": "Лоферы коричневые замшевые", "kind": "lofery", "color": ["korichnevyy", "Коричневый", "#7c5a35"], "price": 500, "box": [14, 58, 48, 95] }
+      ]
+    },
+    {
+      "file": "look-10",
+      "name": "Хаки с белыми вставками",
+      "items": [
+        { "slug": "teniska-haki-vstavki", "name": "Тениска хаки с белыми вставками", "kind": "teniska", "color": ["haki", "Хаки", "#3c4032"], "price": 200, "box": [12, 6, 70, 88] },
+        { "slug": "bryuki-sero-bezhevye", "name": "Брюки серо-бежевые", "kind": "bryuki", "color": ["bezhevyy", "Бежевый", "#cfc6b4"], "price": 270, "box": [55, 2, 95, 90] },
+        { "slug": "lofery-bezhevye-zamsha", "name": "Лоферы бежевые замшевые", "kind": "lofery", "color": ["bezhevyy", "Бежевый", "#c19a68"], "price": 500, "box": [12, 48, 50, 88] }
+      ]
+    },
+    {
+      "file": "look-11",
+      "name": "Коричневая тениска",
+      "items": [
+        { "slug": "teniska-korichnevaya-na-zavyazkah", "name": "Тениска коричневая", "kind": "teniska", "color": ["korichnevyy", "Коричневый", "#4a2d26"], "price": 200, "box": [8, 10, 62, 90] },
+        { "slug": "bryuki-molochnye-na-zavyazkah", "name": "Брюки молочные на завязках", "kind": "bryuki", "color": ["molochnyy", "Молочный", "#efe9dc"], "price": 270, "box": [48, 8, 95, 95] },
+        { "slug": "lofery-temno-korichnevye", "name": "Лоферы тёмно-коричневые", "kind": "lofery", "color": ["korichnevyy", "Коричневый", "#4a3324"], "price": 500, "box": [8, 52, 42, 88] }
+      ]
+    },
+    {
+      "file": "look-12",
+      "name": "Синий джемпер и белые брюки",
+      "items": [
+        { "slug": "teniska-sinyaya-vyazanaya", "name": "Тениска синяя вязаная", "kind": "teniska", "color": ["siniy", "Синий", "#1d2c66"], "price": 200, "box": [10, 10, 68, 88] },
+        { "slug": "bryuki-belye-klassika", "name": "Брюки белые классические", "kind": "bryuki", "color": ["belyy", "Белый", "#f4f2ec"], "price": 270, "box": [52, 4, 98, 92] },
+        { "slug": "lofery-sinie-zamsha", "name": "Лоферы синие замшевые", "kind": "lofery", "color": ["siniy", "Синий", "#26399a"], "price": 500, "box": [18, 55, 52, 90] }
+      ]
+    },
+    {
+      "file": "look-13",
+      "name": "Синяя полоска и рыжие лоферы",
+      "items": [
+        { "slug": "teniska-sinyaya-oranzhevaya-polosa", "name": "Тениска синяя в оранжевую полоску", "kind": "teniska", "color": ["temno-siniy", "Тёмно-синий", "#1a2038"], "price": 200, "box": [6, 4, 62, 88] },
+        { "slug": "bryuki-kremovye-shirokie", "name": "Брюки кремовые широкие", "kind": "bryuki", "color": ["kremovyy", "Кремовый", "#eee7d6"], "price": 270, "box": [50, 2, 95, 90] },
+        { "slug": "lofery-ryzhie-zamsha", "name": "Лоферы рыжие замшевые", "kind": "lofery", "color": ["ryzhiy", "Рыжий", "#a7703a"], "price": 500, "box": [38, 55, 72, 92] }
+      ]
+    },
+    {
+      "file": "look-14",
+      "name": "Бордовая полоска",
+      "items": [
+        { "slug": "teniska-bordovaya-polosa", "name": "Тениска бордовая в полоску", "kind": "teniska", "color": ["bordovyy", "Бордовый", "#6b1f2c"], "price": 200, "box": [18, 2, 78, 72] },
+        { "slug": "bryuki-belye-so-strelkami", "name": "Брюки белые прямые", "kind": "bryuki", "color": ["belyy", "Белый", "#f3f1e9"], "price": 270, "box": [58, 2, 98, 95] },
+        { "slug": "kedy-bezhevye-zamsha", "name": "Кеды бежевые замшевые", "kind": "kedy", "color": ["bezhevyy", "Бежевый", "#cdbb95"], "price": 440, "box": [8, 45, 55, 95] }
+      ]
+    },
+    {
+      "file": "look-15",
+      "name": "Молочная тениска и тёмный деним",
+      "items": [
+        { "slug": "teniska-molochnaya-temnyy-vorot", "name": "Тениска молочная с тёмным воротом", "kind": "teniska", "color": ["molochnyy", "Молочный", "#f0ecdc"], "price": 200, "box": [10, 10, 66, 88] },
+        { "slug": "dzhinsy-temno-sinie-plotnye", "name": "Джинсы тёмно-синие плотные", "kind": "dzhinsy", "color": ["temno-siniy", "Тёмно-синий", "#242c42"], "price": 280, "box": [52, 2, 98, 92] },
+        { "slug": "kedy-belye-tekstilnye", "name": "Кеды белые текстильные", "kind": "kedy", "color": ["belyy", "Белый", "#f0eee8"], "price": 440, "box": [10, 52, 48, 92] }
+      ]
+    },
+    {
+      "file": "look-16",
+      "name": "Белая тениска в тёмную полоску",
+      "items": [
+        { "slug": "teniska-belaya-temnaya-polosa", "name": "Тениска белая в тёмную полоску", "kind": "teniska", "color": ["belyy", "Белый", "#eeece4"], "price": 200, "box": [14, 6, 70, 80] },
+        { "slug": "bryuki-belye-pryamye", "name": "Брюки белые прямого кроя", "kind": "bryuki", "color": ["belyy", "Белый", "#f4f2ea"], "price": 270, "box": [55, 2, 98, 90] },
+        { "slug": "kedy-temno-sinie-zamsha", "name": "Кеды тёмно-синие замшевые", "kind": "kedy", "color": ["temno-siniy", "Тёмно-синий", "#1d2333"], "price": 440, "box": [30, 58, 72, 95] }
+      ]
+    },
+    {
+      "file": "look-17",
+      "name": "Коричневая тениска с белым воротом",
+      "items": [
+        { "slug": "teniska-korichnevaya-belyy-vorot", "name": "Тениска коричневая с белым воротом", "kind": "teniska", "color": ["korichnevyy", "Коричневый", "#4b2b23"], "price": 200, "box": [10, 8, 66, 78] },
+        { "slug": "bryuki-kremovye-klassika", "name": "Брюки кремовые классические", "kind": "bryuki", "color": ["kremovyy", "Кремовый", "#efe9d9"], "price": 270, "box": [52, 2, 96, 92] },
+        { "slug": "lofery-korichnevye-klassika", "name": "Лоферы коричневые классические", "kind": "lofery", "color": ["korichnevyy", "Коричневый", "#6d4626"], "price": 500, "box": [10, 42, 45, 80] }
+      ]
+    },
+    {
+      "file": "look-18",
+      "name": "Тёмно-синяя тениска",
+      "items": [
+        { "slug": "teniska-temno-sinyaya-belyy-vorot", "name": "Тениска тёмно-синяя с белым воротом", "kind": "teniska", "color": ["temno-siniy", "Тёмно-синий", "#1b2238"], "price": 200, "box": [14, 6, 70, 72] },
+        { "slug": "bryuki-belye-so-skladkami", "name": "Брюки белые со складками", "kind": "bryuki", "color": ["belyy", "Белый", "#f4f2ec"], "price": 270, "box": [55, 2, 98, 95] },
+        { "slug": "kedy-sinie-zamsha", "name": "Кеды синие замшевые", "kind": "kedy", "color": ["temno-siniy", "Тёмно-синий", "#1e2540"], "price": 440, "box": [8, 42, 58, 88] }
+      ]
+    },
+    {
+      "file": "look-19",
+      "name": "Красная футболка и красные кеды",
+      "items": [
+        { "slug": "futbolka-krasnaya-oversayz", "name": "Футболка красная оверсайз", "kind": "futbolka", "color": ["krasnyy", "Красный", "#b5121f"], "price": 170, "box": [6, 10, 70, 90] },
+        { "slug": "bryuki-svetlye-hlopok", "name": "Брюки светлые хлопковые", "kind": "bryuki", "color": ["bezhevyy", "Бежевый", "#ded6c2"], "price": 270, "box": [48, 18, 85, 75] },
+        { "slug": "kedy-krasnye-zamsha", "name": "Кеды красные замшевые", "kind": "kedy", "color": ["krasnyy", "Красный", "#b01824"], "price": 440, "box": [5, 52, 45, 92] }
+      ]
+    },
+    {
+      "file": "look-20",
+      "name": "Красный и песочный",
+      "items": [
+        { "slug": "bryuki-pesochnye", "name": "Брюки песочные", "kind": "bryuki", "color": ["bezhevyy", "Бежевый", "#d8cfb8"], "price": 270, "box": [52, 12, 95, 85] }
+      ],
+      "reuse": ["futbolka-krasnaya-oversayz", "kedy-krasnye-zamsha"]
+    }
+  ]
+}
