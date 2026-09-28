@@ -98,11 +98,21 @@ function buildTop(spec: GarmentSpec, body: BodyProfile, offset: number, longSlee
     offset ramps from nothing at the waist to full clearance at the hem, which
     both looks right and guarantees the top wins the overlap.
   */
-  const span = Math.max(1e-6, levels.waist - hem);
+  /*
+    The ramp has to finish above the waistband, not at it. Starting it at the
+    waist left the shirt still hugging the body exactly where the trousers are
+    thickest, so the waistband came through as a band across the front.
+  */
+  const rampTop = levels.waist + 0.07 * h;
+  const rampEnd = levels.waist - 0.01 * h;
+  const span = Math.max(1e-6, rampTop - rampEnd);
   const rings = sliceRings(body.torso, hem, collar).map((ring) => {
-    const belowWaist = Math.min(1, Math.max(0, (levels.waist - ring.y) / span));
+    const belowWaist = Math.min(1, Math.max(0, (rampTop - ring.y) / span));
     const extra = offset + hemClearance(offset) * belowWaist;
-    return { y: ring.y, rx: ring.rx + extra, rz: ring.rz + extra };
+    // keep the ring's own centre: the torso is pushed forward at the chest, and
+    // rebuilding the ring without cz put the shirt back on the axis, so the
+    // chest came through the front of it
+    return { ...ring, rx: ring.rx + extra, rz: ring.rz + extra };
   });
 
   const shell = loft(rings, { capBottom: false, capTop: false, squareness: 2.25 });
@@ -121,6 +131,23 @@ function buildTop(spec: GarmentSpec, body: BodyProfile, offset: number, longSlee
       position: [side * body.armOffsetX, 0, 0],
     });
   }
+
+  /*
+    The deltoid caps sit between the shirt's shell and the sleeve, and being
+    wider than either they came through as two bare patches on the shoulders.
+    A cap of cloth over each one closes the join, which is what a real shoulder
+    seam does too.
+  */
+  const shoulderCloth = new THREE.SphereGeometry(body.shoulderCap.r + offset, 32, 24);
+  shoulderCloth.scale(1, 0.62, 0.94);
+  for (const side of [-1, 1] as const) {
+    pieces.push({
+      key: `shoulder-${side}`,
+      geometry: shoulderCloth.clone(),
+      position: [side * body.shoulderCap.x, body.shoulderCap.y, 0],
+    });
+  }
+  shoulderCloth.dispose();
 
   // a knitted polo reads as a polo only if it has a collar
   if (spec.subcategory === 'Тениска') {

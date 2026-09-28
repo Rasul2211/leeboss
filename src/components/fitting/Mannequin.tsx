@@ -6,31 +6,37 @@ import { loft } from '@/lib/mannequin/geometry';
 import type { BodyProfile } from '@/lib/mannequin/measurements';
 
 /**
- * A shop-window mannequin: matte, featureless, no skin tone and no face.
- * That is deliberate - it is the form a buyer projects themselves onto, and a
- * procedurally generated face would land squarely in the uncanny valley.
+ * A shop-window mannequin, and deliberately not a person.
  *
- * Display mannequins are painted, not bare plaster, so the surface gets a thin
- * clear coat. It catches a soft highlight along the shoulders and thighs, which
- * is most of what tells the eye this is a solid object rather than a flat grey
- * silhouette.
+ * Earlier versions tried to read as a human and landed in the uncanny valley:
+ * close enough to a body that every missing detail counted against it. A dress
+ * form does not have that problem. Nobody expects a face on one, so its absence
+ * is a choice rather than a failure, and a canvas-covered form is a handsome
+ * object in its own right.
+ *
+ * So: no hands, a stand under the feet, and linen rather than paint. The sheen
+ * is what makes it read as cloth - a woven surface throws a soft bloom at
+ * grazing angles that a smooth painted one does not.
  */
-function Surface() {
+function Canvas() {
   return (
     <meshPhysicalMaterial
-      color="#e6e1d9"
-      roughness={0.48}
+      color="#c7bcab"
+      // near-matte: a tailor's form is covered, not lacquered, and the earlier
+      // clear coat is what made it look like moulded plastic
+      roughness={0.92}
       metalness={0}
-      // the clear coat is what a painted display mannequin actually has, and
-      // it is where the environment shows up as a soft travelling highlight
-      clearcoat={0.6}
-      clearcoatRoughness={0.3}
-      envMapIntensity={1.1}
-      sheen={0.3}
-      sheenRoughness={0.6}
-      sheenColor="#fff4e6"
+      sheen={0.85}
+      sheenRoughness={0.45}
+      sheenColor="#efe4d2"
+      envMapIntensity={0.85}
     />
   );
+}
+
+/** Brushed steel for the base, the way a real form is mounted. */
+function Steel() {
+  return <meshStandardMaterial color="#8e9095" roughness={0.36} metalness={0.85} envMapIntensity={1.2} />;
 }
 
 export function Mannequin({ body }: { body: BodyProfile }) {
@@ -39,8 +45,8 @@ export function Mannequin({ body }: { body: BodyProfile }) {
     // the legs looks straight through the figure
     const torso = loft(body.torso, { capBottom: true, capTop: true, squareness: 2.05 });
     const leg = loft(body.leg, { capBottom: true, capTop: false, squareness: 2.05 });
-    const arm = loft(body.arm, { capBottom: false, capTop: true, radialSegments: 40 });
-    const hand = loft(body.hand, { capBottom: true, capTop: false, radialSegments: 32, squareness: 2.0 });
+    // closed at the wrist: the arm now ends there, the way a form does
+    const arm = loft(body.arm, { capBottom: true, capTop: true, radialSegments: 40 });
     const head = loft(body.headRings, { capBottom: false, capTop: true, squareness: 2.1 });
 
     const shoulder = new THREE.SphereGeometry(body.shoulderCap.r, 36, 28);
@@ -54,7 +60,11 @@ export function Mannequin({ body }: { body: BodyProfile }) {
     foot.scale(1, height / width, 1);
     foot.translate(0, 0, forward);
 
-    return { torso, leg, arm, hand, head, shoulder, foot };
+    // the plate it stands on: wide enough to look like a base, thin enough not
+    // to read as a step
+    const plate = new THREE.CylinderGeometry(body.heightM * 0.15, body.heightM * 0.155, body.heightM * 0.008, 64);
+
+    return { torso, leg, arm, head, shoulder, foot, plate };
   }, [body]);
 
   // geometry is rebuilt on every slider move, so the old buffers must go back
@@ -68,12 +78,16 @@ export function Mannequin({ body }: { body: BodyProfile }) {
 
   return (
     <group>
+      <mesh geometry={parts.plate} position={[0, -body.heightM * 0.004, 0]} receiveShadow castShadow>
+        <Steel />
+      </mesh>
+
       <mesh geometry={parts.torso} castShadow receiveShadow>
-        <Surface />
+        <Canvas />
       </mesh>
 
       <mesh geometry={parts.head} castShadow receiveShadow>
-        <Surface />
+        <Canvas />
       </mesh>
 
       {sides.map((side) => (
@@ -83,28 +97,23 @@ export function Mannequin({ body }: { body: BodyProfile }) {
           position={[side * body.shoulderCap.x, body.shoulderCap.y, 0]}
           castShadow
         >
-          <Surface />
+          <Canvas />
         </mesh>
       ))}
 
       {sides.map((side) => (
-        <group key={`arm${side}`} position={[side * body.armOffsetX, 0, 0]}>
-          <mesh geometry={parts.arm} castShadow>
-            <Surface />
-          </mesh>
-          <mesh geometry={parts.hand} castShadow>
-            <Surface />
-          </mesh>
-        </group>
+        <mesh key={`arm${side}`} geometry={parts.arm} position={[side * body.armOffsetX, 0, 0]} castShadow>
+          <Canvas />
+        </mesh>
       ))}
 
       {sides.map((side) => (
         <group key={`leg${side}`} position={[side * body.legOffsetX, 0, 0]}>
           <mesh geometry={parts.leg} castShadow receiveShadow>
-            <Surface />
+            <Canvas />
           </mesh>
           <mesh geometry={parts.foot} position={[0, body.foot.height / 2, 0]} castShadow receiveShadow>
-            <Surface />
+            <Canvas />
           </mesh>
         </group>
       ))}

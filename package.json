@@ -19,6 +19,7 @@
     "fitting:extract": "python _assets/extract_layers.py",
     "fitting:test": "python _assets/test_extract.py",
     "fitting:import": "tsx scripts/import-fitting.ts",
+    "swatches": "python _assets/make_swatches.py",
     "outfits:check": "python _assets/check_outfits.py",
     "outfits:import": "tsx scripts/import-outfits.ts"
   },
