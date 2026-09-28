@@ -10,11 +10,20 @@ export type CartResult = { ok: true } | { ok: false; message: string };
 const addSchema = z.object({
   variantId: z.string().min(1),
   quantity: z.number().int().min(1).max(20).default(1),
+  // an outfit is one line whose top, bottom and shoes are sized separately, so
+  // the three sizes ride along with the line rather than on the variant
+  sizeNote: z.string().max(120).default(''),
 });
 
 /** Adds one variant to the cart, never beyond what is actually in stock. */
-export async function addToCart(input: { variantId: string; quantity?: number }): Promise<CartResult> {
-  const parsed = addSchema.safeParse({ variantId: input.variantId, quantity: input.quantity ?? 1 });
+export async function addToCart(
+  input: { variantId: string; quantity?: number; sizeNote?: string },
+): Promise<CartResult> {
+  const parsed = addSchema.safeParse({
+    variantId: input.variantId,
+    quantity: input.quantity ?? 1,
+    sizeNote: input.sizeNote ?? '',
+  });
   if (!parsed.success) return { ok: false, message: 'Некорректные данные' };
 
   const variant = await prisma.productVariant.findUnique({
@@ -26,8 +35,9 @@ export async function addToCart(input: { variantId: string; quantity?: number })
   if (variant.stock < 1) return { ok: false, message: 'Этого размера сейчас нет в наличии' };
 
   const cartId = await ensureCartId();
+  const { sizeNote } = parsed.data;
   const existing = await prisma.cartItem.findUnique({
-    where: { cartId_variantId: { cartId, variantId: variant.id } },
+    where: { cartId_variantId_sizeNote: { cartId, variantId: variant.id, sizeNote } },
     select: { quantity: true },
   });
 
@@ -37,9 +47,9 @@ export async function addToCart(input: { variantId: string; quantity?: number })
   }
 
   await prisma.cartItem.upsert({
-    where: { cartId_variantId: { cartId, variantId: variant.id } },
+    where: { cartId_variantId_sizeNote: { cartId, variantId: variant.id, sizeNote } },
     update: { quantity: wanted },
-    create: { cartId, variantId: variant.id, quantity: parsed.data.quantity },
+    create: { cartId, variantId: variant.id, quantity: parsed.data.quantity, sizeNote },
   });
 
   revalidatePath('/cart');
@@ -90,7 +100,7 @@ export async function addLookToCart(lookId: string): Promise<CartResult & { adde
     }
 
     await prisma.cartItem.upsert({
-      where: { cartId_variantId: { cartId, variantId: variant.id } },
+      where: { cartId_variantId_sizeNote: { cartId, variantId: variant.id, sizeNote: '' } },
       update: { quantity: { increment: 1 } },
       create: { cartId, variantId: variant.id, quantity: 1 },
     });

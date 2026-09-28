@@ -16,7 +16,8 @@ type Worn = Partial<Record<Slot, { productId: string; colorKey: string }>>;
 
 async function loadProducts(): Promise<FittingProduct[]> {
   const rows = await prisma.product.findMany({
-    where: { isActive: true },
+    // an outfit is a whole look in one line: it has no place on the mannequin
+    where: { isActive: true, isOutfit: false },
     orderBy: [{ mannequinSlot: 'asc' }, { price: 'asc' }],
     select: {
       id: true,

@@ -99,7 +99,9 @@ export async function createOrder(_prev: CheckoutState, formData: FormData): Pro
               productId: item.variant.product.id,
               variantId: item.variant.id,
               name: item.variant.product.name,
-              size: item.variant.size,
+              // an outfit carries three sizes at once, so the line records what
+              // the buyer picked rather than the variant's single "ONE"
+              size: item.sizeNote || item.variant.size,
               colorName: item.variant.color.name,
               price: effectivePrice(item.variant.product.price, item.variant.product.salePrice),
               quantity: item.quantity,

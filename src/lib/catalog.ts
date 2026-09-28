@@ -132,6 +132,7 @@ export async function getProductBySlug(slug: string) {
       images: { orderBy: { sortOrder: 'asc' } },
       colors: { orderBy: { sortOrder: 'asc' } },
       variants: { select: { id: true, size: true, stock: true, colorId: true } },
+      pieces: { orderBy: { sortOrder: 'asc' }, select: { id: true, title: true, price: true } },
       reviews: {
         where: { status: 'APPROVED' },
         orderBy: { createdAt: 'desc' },
@@ -143,7 +144,9 @@ export async function getProductBySlug(slug: string) {
 
 export async function getNewArrivals(take = 6) {
   return prisma.product.findMany({
-    where: { isActive: true },
+    // outfits are new too, but they would fill the row and push every garment
+    // out of it; they have a section of their own
+    where: { isActive: true, isOutfit: false },
     select: productCardSelect,
     orderBy: { createdAt: 'desc' },
     take,
@@ -207,3 +210,22 @@ export async function getTestimonials() {
     select: { id: true, authorName: true, text: true },
   });
 }
+
+/** The finished outfits, newest first: one photograph each, priced as a whole. */
+export async function getOutfits(take?: number) {
+  return prisma.product.findMany({
+    where: { isActive: true, isOutfit: true },
+    orderBy: { createdAt: 'desc' },
+    take,
+    select: {
+      id: true,
+      slug: true,
+      name: true,
+      price: true,
+      images: { select: { url: true, alt: true }, orderBy: { sortOrder: 'asc' }, take: 1 },
+      pieces: { orderBy: { sortOrder: 'asc' }, select: { id: true, title: true, price: true } },
+    },
+  });
+}
+
+export type OutfitCardData = Awaited<ReturnType<typeof getOutfits>>[number];

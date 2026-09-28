@@ -18,7 +18,8 @@
     "db:studio": "prisma studio",
     "fitting:extract": "python _assets/extract_layers.py",
     "fitting:test": "python _assets/test_extract.py",
-    "fitting:import": "tsx scripts/import-fitting.ts"
+    "fitting:import": "tsx scripts/import-fitting.ts",
+    "outfits:import": "tsx scripts/import-outfits.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

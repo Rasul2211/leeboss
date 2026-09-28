@@ -39,8 +39,10 @@ export function CartRow({ item }: { item: CartItem }) {
               {product.name}
             </Link>
             <p className="mt-1 text-xs text-ink-muted">
-              {color.name}
-              {size !== 'ONE' ? ` · размер ${size}` : ''}
+              {/* an outfit records the three sizes the buyer picked; an ordinary
+                  product has one, on its variant */}
+              {item.sizeNote ? item.sizeNote : color.name}
+              {!item.sizeNote && size !== 'ONE' ? ` · размер ${size}` : ''}
             </p>
           </div>
 

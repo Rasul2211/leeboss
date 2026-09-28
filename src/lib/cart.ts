@@ -20,6 +20,7 @@ const MAX_AGE = 60 * 60 * 24 * 60; // 60 days
 export const cartItemSelect = {
   id: true,
   quantity: true,
+  sizeNote: true,
   variant: {
     select: {
       id: true,
@@ -34,6 +35,7 @@ export const cartItemSelect = {
           brand: true,
           price: true,
           salePrice: true,
+          isOutfit: true,
           images: { select: { url: true, alt: true }, orderBy: { sortOrder: 'asc' }, take: 1 },
         },
       },
@@ -120,7 +122,7 @@ export async function mergeGuestCart(userId: string): Promise<void> {
 
   const guest = await prisma.cart.findUnique({
     where: { sessionId },
-    select: { id: true, items: { select: { variantId: true, quantity: true } } },
+    select: { id: true, items: { select: { variantId: true, quantity: true, sizeNote: true } } },
   });
   if (!guest) return;
 
@@ -131,9 +133,20 @@ export async function mergeGuestCart(userId: string): Promise<void> {
 
     for (const item of guest.items) {
       await prisma.cartItem.upsert({
-        where: { cartId_variantId: { cartId: target.id, variantId: item.variantId } },
+        where: {
+          cartId_variantId_sizeNote: {
+            cartId: target.id,
+            variantId: item.variantId,
+            sizeNote: item.sizeNote,
+          },
+        },
         update: { quantity: { increment: item.quantity } },
-        create: { cartId: target.id, variantId: item.variantId, quantity: item.quantity },
+        create: {
+          cartId: target.id,
+          variantId: item.variantId,
+          quantity: item.quantity,
+          sizeNote: item.sizeNote,
+        },
       });
     }
   }

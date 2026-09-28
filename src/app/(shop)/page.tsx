@@ -1,26 +1,34 @@
 import { Hero } from '@/components/home/Hero';
 import { CategoryTiles } from '@/components/home/CategoryTiles';
 import { FittingPromo } from '@/components/home/FittingPromo';
+import { ProductCarousel } from '@/components/home/ProductCarousel';
+import { OutfitSection } from '@/components/home/OutfitSection';
+import { getCarouselItems } from '@/lib/carousel';
 import { Advantages } from '@/components/home/Advantages';
 import { Testimonials } from '@/components/home/Testimonials';
 import { LooksSection } from '@/components/home/LooksSection';
 import { Section, ProductGrid } from '@/components/home/Section';
-import { getBestSellers, getNewArrivals, getOnSale, getPublicLooks, getTestimonials } from '@/lib/catalog';
+import { getBestSellers, getNewArrivals, getOnSale, getOutfits, getPublicLooks, getTestimonials } from '@/lib/catalog';
 import { getFavoriteIds } from '@/lib/favorites';
 
 export default async function HomePage() {
-  const [newArrivals, bestSellers, onSale, looks, testimonials, favoriteIds] = await Promise.all([
-    getNewArrivals(6),
-    getBestSellers(6),
-    getOnSale(6),
-    getPublicLooks(),
-    getTestimonials(),
-    getFavoriteIds(),
-  ]);
+  const [newArrivals, bestSellers, onSale, looks, testimonials, favoriteIds, carousel, outfits] =
+    await Promise.all([
+      getNewArrivals(6),
+      getBestSellers(6),
+      getOnSale(6),
+      getPublicLooks(),
+      getTestimonials(),
+      getFavoriteIds(),
+      getCarouselItems(),
+      getOutfits(6),
+    ]);
 
   return (
     <>
       <Hero />
+      <OutfitSection outfits={outfits} />
+      <ProductCarousel items={carousel} />
       <CategoryTiles />
 
       <Section

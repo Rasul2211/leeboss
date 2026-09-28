@@ -7,6 +7,7 @@ import { getProductBySlug } from '@/lib/catalog';
 import { getFavoriteIds } from '@/lib/favorites';
 import { effectivePrice, formatPrice } from '@/lib/money';
 import { AddToCartForm } from '@/components/product/AddToCartForm';
+import { AddOutfitToCartForm } from '@/components/product/AddOutfitToCartForm';
 import { FavoriteButton } from '@/components/product/FavoriteButton';
 import { Button } from '@/components/ui/button';
 
@@ -58,7 +59,11 @@ export default async function ProductPage({ params }: Props) {
 
       <div className="mt-6 grid gap-8 lg:grid-cols-2 lg:gap-14">
         <div className="relative">
-          <div className="relative aspect-3/4 overflow-hidden rounded-card bg-surface-alt">
+          <div
+            className={`relative overflow-hidden rounded-card bg-surface-alt ${
+              product.isOutfit ? 'aspect-square' : 'aspect-3/4'
+            }`}
+          >
             {product.images[0] ? (
               <Image
                 src={product.images[0].url}
@@ -66,7 +71,9 @@ export default async function ProductPage({ params }: Props) {
                 fill
                 priority
                 sizes="(min-width: 1024px) 50vw, 100vw"
-                className="object-cover"
+                /* an outfit is framed as it was shot: cropping it would cut the
+                   shoes off the bottom of the frame */
+                className={product.isOutfit ? 'object-contain' : 'object-cover'}
               />
             ) : (
               <div className="grid h-full place-items-center text-sm text-ink-faint">Нет фото</div>
@@ -102,19 +109,44 @@ export default async function ProductPage({ params }: Props) {
             </p>
           ) : null}
 
-          <div className="mt-6">
-            <AddToCartForm
-              colors={product.colors}
-              variants={product.variants}
-              sizeType={product.category.sizeType}
-            />
-          </div>
+          {product.isOutfit ? (
+            <>
+              <ul className="mt-6 divide-y divide-line border-y border-line">
+                {product.pieces.map((piece) => (
+                  <li key={piece.id} className="flex items-baseline justify-between gap-4 py-2.5">
+                    <span className="text-sm text-ink">{piece.title}</span>
+                    <span className="price-figures shrink-0 text-sm text-ink-muted">
+                      {formatPrice(piece.price)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
 
-          <div className="mt-4">
-            <Button asChild variant="outline" size="lg" className="w-full">
-              <Link href={`/fitting?add=${product.slug}`}>Примерить на манекене</Link>
-            </Button>
-          </div>
+              <div className="mt-6">
+                <AddOutfitToCartForm
+                  variantId={product.variants[0]?.id ?? ''}
+                  inStock={inStock}
+                  hasShoes={product.pieces.some((piece) => isShoe(piece.title))}
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="mt-6">
+                <AddToCartForm
+                  colors={product.colors}
+                  variants={product.variants}
+                  sizeType={product.category.sizeType}
+                />
+              </div>
+
+              <div className="mt-4">
+                <Button asChild variant="outline" size="lg" className="w-full">
+                  <Link href={`/fitting?add=${product.slug}`}>Примерить на манекене</Link>
+                </Button>
+              </div>
+            </>
+          )}
 
           {!inStock ? (
             <p className="mt-4 rounded-lg border border-line bg-surface-alt px-4 py-3 text-sm text-ink-muted">
@@ -125,11 +157,17 @@ export default async function ProductPage({ params }: Props) {
           <dl className="mt-8 divide-y divide-line border-t border-line text-sm">
             <Row label="Категория" value={product.category.name} />
             {product.brand ? <Row label="Бренд" value={product.brand} /> : null}
-            <Row label="Цвета" value={product.colors.map((c) => c.name).join(', ')} />
-            <Row
-              label="Размеры"
-              value={[...new Set(product.variants.map((v) => v.size))].join(', ')}
-            />
+            {product.isOutfit ? (
+              <Row label="В образе" value={`${product.pieces.length} вещи`} />
+            ) : (
+              <>
+                <Row label="Цвета" value={product.colors.map((c) => c.name).join(', ')} />
+                <Row
+                  label="Размеры"
+                  value={[...new Set(product.variants.map((v) => v.size))].join(', ')}
+                />
+              </>
+            )}
             {/* Composition and care are deliberately absent: the source photos do
                 not state them, so the block simply does not appear. */}
             {product.material ? <Row label="Состав" value={product.material} /> : null}
@@ -175,4 +213,9 @@ function Row({ label, value }: { label: string; value: string }) {
       <dd className="text-ink">{value}</dd>
     </div>
   );
+}
+
+/** Whether a price-list line is footwear, which is sized on its own scale. */
+function isShoe(title: string): boolean {
+  return /кед|кросс|лофер|сандал|тапк|ботин|туфл/i.test(title);
 }

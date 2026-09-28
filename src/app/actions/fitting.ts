@@ -69,7 +69,7 @@ export async function addOutfitToCart(
     }
 
     await prisma.cartItem.upsert({
-      where: { cartId_variantId: { cartId, variantId: variant.id } },
+      where: { cartId_variantId_sizeNote: { cartId, variantId: variant.id, sizeNote: '' } },
       update: { quantity: { increment: 1 } },
       create: { cartId, variantId: variant.id, quantity: 1 },
     });
