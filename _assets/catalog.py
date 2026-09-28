@@ -59,7 +59,7 @@ ITEMS = [
     ('22-44-27', 'nb-327', 'New Balance 327', 'Кроссовки', SHOES, EU, ['39', '40', '44'], True, 130, 'New Balance', ['cream', 'green'], None),
     ('22-44-31', 'on-roger', 'On Roger', 'Кроссовки', SHOES, EU, ['41', '42', '43', '44', '45'], True, 200, 'On', ['white'], None),
     ('22-44-34', 'nb-530', 'New Balance 530', 'Кроссовки', SHOES, EU, ['39', '40', '41', '42', '44'], True, 200, 'New Balance', ['lgrey', 'beige'], None),
-    ('22-44-37', 'cactus-bandana', 'Cactus Bandana', 'Кроссовки', SHOES, EU, ['41', '42'], True, 150, None, ['navy', 'beige'], None),
+    ('22-44-37', 'cactus-bandana', 'Кроссовки с принтом бандана', 'Кроссовки', SHOES, EU, ['41', '42'], True, 150, None, ['navy', 'beige'], None),
     ('22-44-41', 'nike-dunk-cacao', 'Nike Dunk Cacao', 'Кроссовки', SHOES, EU, ['38', '39', '41', '44'], True, 180, 'Nike', ['brown', 'white'], 'Чуть маломерят'),
     ('22-44-43', 'nike-cortez', 'Nike Cortez', 'Кроссовки', SHOES, EU, ['38', '39', '40', '42', '44'], True, 180, 'Nike', ['white', 'red'], None),
     ('22-44-49', 'adidas-forum', 'Adidas Forum', 'Кроссовки', SHOES, EU, ['40'], True, 200, 'Adidas', ['white', 'black'], None),
