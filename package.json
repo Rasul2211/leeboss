@@ -21,7 +21,8 @@
     "fitting:import": "tsx scripts/import-fitting.ts",
     "swatches": "python _assets/make_swatches.py",
     "outfits:check": "python _assets/check_outfits.py",
-    "outfits:import": "tsx scripts/import-outfits.ts"
+    "outfits:import": "tsx scripts/import-outfits.ts",
+    "products:import": "tsx scripts/import-new-products.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

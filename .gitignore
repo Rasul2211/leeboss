@@ -29,3 +29,7 @@ _assets/catalog/images/
 # working frames from the photo session; only the cut layers are published
 _assets/fitting/
 _assets/_test_extract/
+
+# папка, куда магазин скидывает исходные скриншоты; в репозитории нужны
+# только готовые карточки в public/products
+_assets/новые-фото/

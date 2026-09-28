@@ -1,0 +1,30 @@
+{
+  "note": "Новые товары осенней поставки. frame — номер очищенного кадра. Цены по прейскуранту магазина: кеды 440, джемпер 350, кардиган 420, брюки 270, джинсы 280. Кадры 9 и 14 пропущены: это те же чёрные брюки, что и 11.",
+  "products": [
+    { "frame": 1, "slug": "kedy-kremovye-vysokie", "name": "Кеды кремовые высокие", "kind": "kedy", "color": ["kremovyy", "Кремовый", "#e9e2cd"], "price": 440 },
+    { "frame": 2, "slug": "kedy-temno-sinie-belye", "name": "Кеды тёмно-синие с белым", "kind": "kedy", "color": ["temno-siniy", "Тёмно-синий", "#242c46"], "price": 440 },
+    { "frame": 3, "slug": "kedy-cherno-belye-gamma", "name": "Кеды чёрно-белые", "kind": "kedy", "color": ["chernyy", "Чёрный", "#1a1a1d"], "price": 440 },
+    { "frame": 4, "slug": "kedy-belye-nizkie", "name": "Кеды белые низкие", "kind": "kedy", "color": ["belyy", "Белый", "#f2f1ed"], "price": 440 },
+
+    { "frame": 5, "slug": "dzhemper-sero-zelenyy-zip", "name": "Джемпер серо-зелёный на молнии", "kind": "dzhemper", "color": ["haki", "Хаки", "#8c8a7e" ], "price": 350 },
+    { "frame": 6, "slug": "kardigan-chernyy-vyazanyy", "name": "Кардиган чёрный вязаный", "kind": "dzhemper", "color": ["chernyy", "Чёрный", "#1c1c1f"], "price": 420 },
+    { "frame": 7, "slug": "dzhemper-goluboy-zip", "name": "Джемпер голубой на молнии", "kind": "dzhemper", "color": ["goluboy", "Голубой", "#7b93b8"], "price": 350 },
+    { "frame": 8, "slug": "kardigan-temno-siniy-pugovitsy", "name": "Кардиган тёмно-синий на пуговицах", "kind": "dzhemper", "color": ["temno-siniy", "Тёмно-синий", "#222a45"], "price": 420 },
+    { "frame": 10, "slug": "kardigan-svetlo-seryy-zip", "name": "Кардиган светло-серый на молнии", "kind": "dzhemper", "color": ["seryy", "Серый", "#c3c5c7"], "price": 420 },
+
+    { "frame": 11, "slug": "bryuki-chernye-shirokie-osen", "name": "Брюки чёрные широкие", "kind": "bryuki", "color": ["chernyy", "Чёрный", "#17171a"], "price": 270 },
+    { "frame": 12, "slug": "dzhinsy-temno-sinie-klassika", "name": "Джинсы тёмно-синие классические", "kind": "dzhinsy", "color": ["temno-siniy", "Тёмно-синий", "#2a3550"], "price": 280 },
+    { "frame": 13, "slug": "bryuki-molochnye-lnyanye-zavyazki", "name": "Брюки молочные льняные на завязках", "kind": "bryuki", "color": ["molochnyy", "Молочный", "#ece5d6"], "price": 270 },
+    { "frame": 15, "slug": "bryuki-kremovye-shirokie-osen", "name": "Брюки кремовые широкие", "kind": "bryuki", "color": ["kremovyy", "Кремовый", "#ece2cc"], "price": 270 },
+    { "frame": 16, "slug": "bryuki-temno-korichnevye", "name": "Брюки тёмно-коричневые", "kind": "bryuki", "color": ["korichnevyy", "Коричневый", "#5c4f42"], "price": 270 },
+    { "frame": 17, "slug": "bryuki-sero-bezhevye-osen", "name": "Брюки серо-бежевые", "kind": "bryuki", "color": ["bezhevyy", "Бежевый", "#b3ada0"], "price": 270 },
+    { "frame": 18, "slug": "bryuki-korichnevye-klassika", "name": "Брюки коричневые классические", "kind": "bryuki", "color": ["korichnevyy", "Коричневый", "#6b5a48"], "price": 270 },
+    { "frame": 19, "slug": "bryuki-olivkovye", "name": "Брюки оливковые", "kind": "bryuki", "color": ["haki", "Хаки", "#6e6a5a"], "price": 270 },
+    { "frame": 20, "slug": "dzhinsy-sinie-potertye", "name": "Джинсы синие потёртые", "kind": "dzhinsy", "color": ["siniy", "Синий", "#3c5a80"], "price": 280 },
+    { "frame": 21, "slug": "bryuki-temno-serye", "name": "Брюки тёмно-серые", "kind": "bryuki", "color": ["seryy", "Серый", "#4a4a4d"], "price": 270 },
+    { "frame": 22, "slug": "bryuki-belye-pryamye-osen", "name": "Брюки белые прямые", "kind": "bryuki", "color": ["belyy", "Белый", "#f0ece1"], "price": 270 },
+    { "frame": 23, "slug": "bryuki-temno-sinie-klassika", "name": "Брюки тёмно-синие классические", "kind": "bryuki", "color": ["temno-siniy", "Тёмно-синий", "#2b3244"], "price": 270 },
+    { "frame": 24, "slug": "bryuki-molochnye-pryamye", "name": "Брюки молочные прямые", "kind": "bryuki", "color": ["molochnyy", "Молочный", "#efe9dc"], "price": 270 },
+    { "frame": 25, "slug": "bryuki-kremovye-so-strelkami", "name": "Брюки кремовые со стрелками", "kind": "bryuki", "color": ["kremovyy", "Кремовый", "#e8e0cd"], "price": 270 }
+  ]
+}

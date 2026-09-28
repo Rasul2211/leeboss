@@ -1,5 +1,5 @@
 """
-Check the outfit list for the mistakes that are easy to make by hand.
+Check the catalogue lists for the mistakes that are easy to make by hand.
 
 Two of the twenty frames turned out to be the same outfit photographed twice,
 and two different caps had been given the same name, so both read as one thing.
@@ -10,11 +10,14 @@ Neither is visible while reading the file; both are obvious to a script.
 import collections
 import json
 import os
+import re
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, '_assets', 'outfits.json')
+PRODUCTS_DATA = os.path.join(ROOT, '_assets', 'new-products.json')
 FRAMES = os.path.join(ROOT, 'public', 'looks')
+PRODUCT_PHOTOS = os.path.join(ROOT, 'public', 'products')
 
 
 def check(outfits):
@@ -68,13 +71,38 @@ def check(outfits):
     return problems
 
 
+def check_products(items):
+    """The same kinds of mistake, for the garments sold on their own."""
+    problems = []
+
+    for key, label in (('slug', 'адрес'), ('name', 'название'), ('frame', 'кадр')):
+        for value, count in collections.Counter(i[key] for i in items).items():
+            if count > 1:
+                problems.append(f'{label} «{value}» повторяется {count} раза')
+
+    for item in items:
+        if not re.fullmatch(r'[a-z0-9-]+', item['slug']):
+            problems.append(f'адрес «{item["slug"]}» не латиницей')
+        if not re.fullmatch(r'#[0-9a-f]{6}', item['color'][2]):
+            problems.append(f'у «{item["slug"]}» испорченный цвет {item["color"][2]}')
+        if item['price'] <= 0:
+            problems.append(f'у «{item["slug"]}» цена {item["price"]}')
+        if not os.path.exists(os.path.join(PRODUCT_PHOTOS, f'{item["slug"]}.jpg')):
+            problems.append(f'нет фотографии {item["slug"]}.jpg')
+
+    return problems
+
+
 def main():
     with open(DATA, encoding='utf-8') as handle:
         outfits = json.load(handle)['outfits']
 
-    problems = check(outfits)
+    with open(PRODUCTS_DATA, encoding='utf-8') as handle:
+        products = json.load(handle)['products']
+
+    problems = check(outfits) + check_products(products)
     pieces = sum(len(o['pieces']) for o in outfits)
-    print(f'образов: {len(outfits)}, вещей: {pieces}')
+    print(f'образов: {len(outfits)}, вещей в них: {pieces}, отдельных товаров: {len(products)}')
 
     if problems:
         print('НАЙДЕНЫ ОШИБКИ:')
