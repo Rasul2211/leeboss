@@ -3,7 +3,7 @@ import { CategoryTiles } from '@/components/home/CategoryTiles';
 import { FittingPromo } from '@/components/home/FittingPromo';
 import { ProductCarousel } from '@/components/home/ProductCarousel';
 import { OutfitSection } from '@/components/home/OutfitSection';
-import { getCarouselItems } from '@/lib/carousel';
+import { getShoeCarousel, getSinglesGrid } from '@/lib/carousel';
 import { Advantages } from '@/components/home/Advantages';
 import { Testimonials } from '@/components/home/Testimonials';
 import { LooksSection } from '@/components/home/LooksSection';
@@ -12,7 +12,7 @@ import { getBestSellers, getNewArrivals, getOnSale, getOutfits, getPublicLooks, 
 import { getFavoriteIds } from '@/lib/favorites';
 
 export default async function HomePage() {
-  const [newArrivals, bestSellers, onSale, looks, testimonials, favoriteIds, carousel, outfits] =
+  const [newArrivals, bestSellers, onSale, looks, testimonials, favoriteIds, shoes, outfits, singles] =
     await Promise.all([
       getNewArrivals(6),
       getBestSellers(6),
@@ -20,15 +20,25 @@ export default async function HomePage() {
       getPublicLooks(),
       getTestimonials(),
       getFavoriteIds(),
-      getCarouselItems(),
+      getShoeCarousel(),
       getOutfits(6),
+      getSinglesGrid(),
     ]);
 
   return (
     <>
       <Hero />
       <OutfitSection outfits={outfits} />
-      <ProductCarousel items={carousel} />
+      <ProductCarousel items={shoes} />
+
+      <Section
+        title="Вещи по отдельности"
+        description="Всё, что можно взять отдельно от образа."
+        href="/catalog"
+      >
+        <ProductGrid products={singles} favoriteIds={favoriteIds} />
+      </Section>
+
       <CategoryTiles />
 
       <Section

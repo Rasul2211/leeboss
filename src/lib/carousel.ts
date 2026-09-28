@@ -1,17 +1,17 @@
 import { prisma } from '@/lib/prisma';
+import { productCardSelect, type ProductCardData } from '@/lib/catalog';
 import { effectivePrice } from '@/lib/money';
 import type { CarouselItem } from '@/components/home/ProductCarousel';
 
 /**
- * The garments that can be shown on their own, large and centred.
+ * Which garments can be shown on their own, away from an outfit.
  *
  * Listed by hand rather than filtered by category, because what decides it is
  * the photograph, not the kind of thing: about half the catalogue was shot on a
- * person, and a torso in the middle of a row of trainers on white breaks the
- * whole row. Those pieces stay in the catalogue and out of here until they are
- * reshot.
+ * person, and a torso between two pairs of trainers breaks the row. Those
+ * pieces stay in the catalogue and out of here until they are reshot.
  */
-const SHOT_ALONE = [
+const SHOES = [
   'adidas-gazelle',
   'nike-dunk-cacao',
   'nike-cortez',
@@ -23,21 +23,26 @@ const SHOT_ALONE = [
   'nb-327',
   'nb-550',
   'on-roger',
-  'cactus-bandana',
-  'kepka-chernaya',
-  'kepka-bezhevaya',
+];
+
+/** Everything else shot on its own: caps, knitwear, denim. */
+const OTHERS = [
   'teniska-chernaya-vyazanaya',
   'teniska-chernaya-fakturnaya',
+  'kepka-chernaya',
+  'kepka-bezhevaya',
   'dzhinsy-golubye-baggy',
   'dzhinsy-golubye-shirokie',
   'dzhinsy-svetlye-potertye',
   'dzhinsy-temno-sinie-shirokie',
   'dzhinsy-korichnevye-gradient',
+  'cactus-bandana',
 ];
 
-export async function getCarouselItems(): Promise<CarouselItem[]> {
+/** The shoe row: one pair at a time, large, the way the shop shoots them. */
+export async function getShoeCarousel(): Promise<CarouselItem[]> {
   const rows = await prisma.product.findMany({
-    where: { slug: { in: SHOT_ALONE }, isActive: true },
+    where: { slug: { in: SHOES }, isActive: true },
     select: {
       slug: true,
       name: true,
@@ -50,9 +55,8 @@ export async function getCarouselItems(): Promise<CarouselItem[]> {
 
   const bySlug = new Map(rows.map((row) => [row.slug, row]));
 
-  // keep the order written above: it alternates shoes, caps and denim, which a
-  // query ordered by price or date would not
-  return SHOT_ALONE.flatMap((slug) => {
+  // keep the order written above rather than whatever the query returns
+  return SHOES.flatMap((slug) => {
     const row = bySlug.get(slug);
     const image = row?.images[0]?.url;
     if (!row || !image) return [];
@@ -65,5 +69,19 @@ export async function getCarouselItems(): Promise<CarouselItem[]> {
         image,
       },
     ];
+  });
+}
+
+/** The rest, as ordinary cards. */
+export async function getSinglesGrid(): Promise<ProductCardData[]> {
+  const rows = await prisma.product.findMany({
+    where: { slug: { in: OTHERS }, isActive: true },
+    select: productCardSelect,
+  });
+
+  const bySlug = new Map(rows.map((row) => [row.slug, row]));
+  return OTHERS.flatMap((slug) => {
+    const row = bySlug.get(slug);
+    return row ? [row] : [];
   });
 }

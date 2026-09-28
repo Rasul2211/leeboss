@@ -69,13 +69,13 @@ export function ProductCarousel({ items }: { items: CarouselItem[] }) {
     <section className="overflow-hidden bg-surface-alt py-14 sm:py-16">
       <div className="mx-auto flex max-w-7xl items-baseline justify-between gap-4 px-4">
         <h2 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-          Вещи по отдельности
+          Кроссовки и кеды
         </h2>
         <Link
-          href="/catalog"
+          href="/catalog/obuv"
           className="text-sm font-medium text-brand hover:text-brand-hover"
         >
-          Весь каталог
+          Вся обувь
         </Link>
       </div>
 
@@ -111,7 +111,7 @@ export function ProductCarousel({ items }: { items: CarouselItem[] }) {
           type="button"
           onClick={() => go(-1)}
           disabled={current === 0}
-          aria-label="Предыдущая вещь"
+          aria-label="Предыдущая пара"
           className="grid size-10 shrink-0 place-items-center rounded-full border border-line bg-white text-ink transition-colors hover:border-ink/40 disabled:opacity-30"
         >
           <ChevronLeft className="size-4" aria-hidden />
@@ -136,7 +136,7 @@ export function ProductCarousel({ items }: { items: CarouselItem[] }) {
           type="button"
           onClick={() => go(1)}
           disabled={current === items.length - 1}
-          aria-label="Следующая вещь"
+          aria-label="Следующая пара"
           className="grid size-10 shrink-0 place-items-center rounded-full border border-line bg-white text-ink transition-colors hover:border-ink/40 disabled:opacity-30"
         >
           <ChevronRight className="size-4" aria-hidden />
