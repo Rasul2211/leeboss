@@ -6,8 +6,10 @@ const config: NextConfig = {
   // hostname; without this Next refuses its asset requests as cross-origin
   allowedDevOrigins: ['*.trycloudflare.com'],
   images: {
-    // catalogue photos are served from /public, so no remote patterns are needed yet
     formats: ['image/avif', 'image/webp'],
+    // photographs uploaded from the admin panel live in Vercel Blob, because
+    // the site's own folder is read-only once deployed
+    remotePatterns: [{ protocol: 'https', hostname: '*.public.blob.vercel-storage.com' }],
   },
   experimental: {
     // three.js ships large ES modules; keep them out of the server bundle graph

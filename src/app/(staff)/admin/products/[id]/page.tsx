@@ -6,6 +6,7 @@ import { Permission } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser, hasPermission, requirePermission } from '@/lib/auth';
 import { ProductEditor } from '@/components/staff/ProductEditor';
+import { ProductPhotoEditor } from '@/components/staff/ProductPhotoEditor';
 
 export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
   await requirePermission(Permission.PRODUCTS_VIEW);
@@ -53,6 +54,14 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
           </div>
         </div>
       </div>
+
+      {hasPermission(user, Permission.PRODUCTS_MANAGE) ? (
+        <ProductPhotoEditor
+          productId={product.id}
+          current={product.images[0]?.url ?? null}
+          isOutfit={product.isOutfit}
+        />
+      ) : null}
 
       <ProductEditor
         product={{
