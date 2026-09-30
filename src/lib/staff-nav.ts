@@ -13,7 +13,7 @@ export type StaffSection = {
   /** appended to the panel root, e.g. "/orders" under "/admin" */
   path: string;
   permission: Permission;
-  icon: 'dashboard' | 'orders' | 'products' | 'categories' | 'stock' | 'looks' | 'customers' | 'employees' | 'reviews' | 'delivery';
+  icon: 'dashboard' | 'orders' | 'products' | 'categories' | 'stock' | 'looks' | 'customers' | 'employees' | 'reviews' | 'delivery' | 'notifications';
 };
 
 export const STAFF_SECTIONS: StaffSection[] = [
@@ -27,6 +27,7 @@ export const STAFF_SECTIONS: StaffSection[] = [
   { key: 'customers', label: 'Клиенты', path: '/customers', permission: Permission.CUSTOMERS_VIEW, icon: 'customers' },
   { key: 'employees', label: 'Сотрудники', path: '/employees', permission: Permission.EMPLOYEES_MANAGE, icon: 'employees' },
   { key: 'delivery', label: 'Доставка', path: '/delivery', permission: Permission.SETTINGS_MANAGE, icon: 'delivery' },
+  { key: 'notifications', label: 'Уведомления', path: '/notifications', permission: Permission.SETTINGS_MANAGE, icon: 'notifications' },
 ];
 
 export const PERMISSION_LABELS: Record<Permission, string> = {

@@ -10,8 +10,7 @@ import {
   Star,
   Truck,
   Users,
-  UserCog,
-} from 'lucide-react';
+  UserCog, Bell } from 'lucide-react';
 import { Logo } from '@/components/brand/Logo';
 import { STAFF_SECTIONS, type StaffSection } from '@/lib/staff-nav';
 import { hasPermission, type CurrentUser } from '@/lib/auth';
@@ -29,6 +28,7 @@ const ICONS: Record<StaffSection['icon'], typeof Package> = {
   employees: UserCog,
   reviews: MessageSquare,
   delivery: Truck,
+  notifications: Bell,
 };
 
 type Props = {

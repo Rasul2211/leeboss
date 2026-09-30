@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { DeliveryMethod, OrderStatus, PaymentMethod, PaymentStatus, Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
+import { orderMessage, sendTelegram } from '@/lib/telegram';
 import { getCurrentUser } from '@/lib/auth';
 import { cartSubtotal, findCartId, getCartItems } from '@/lib/cart';
 import { deliveryCost } from '@/lib/delivery';
@@ -55,10 +56,10 @@ export async function createOrder(_prev: CheckoutState, formData: FormData): Pro
   const subtotal = cartSubtotal(items);
   const shipping = deliveryCost(input.deliveryMethod as DeliveryMethod, zone, subtotal);
 
-  let number: string;
+  let created;
 
   try {
-    number = await prisma.$transaction(async (tx) => {
+    created = await prisma.$transaction(async (tx) => {
       // reserve stock first: an order that cannot be fulfilled must not exist
       for (const item of items) {
         const reserved = await tx.productVariant.updateMany({
@@ -109,11 +110,19 @@ export async function createOrder(_prev: CheckoutState, formData: FormData): Pro
           },
           events: { create: { status: OrderStatus.NEW, note: 'Заказ оформлен на сайте' } },
         },
-        select: { number: true },
+        select: {
+          number: true,
+          total: true,
+          customerName: true,
+          customerPhone: true,
+          address: true,
+          comment: true,
+          items: { select: { name: true, size: true, colorName: true, quantity: true, price: true } },
+        },
       });
 
       await tx.cartItem.deleteMany({ where: { cartId } });
-      return order.number;
+      return order;
     });
   } catch (error) {
     if (error instanceof OutOfStock) {
@@ -122,9 +131,60 @@ export async function createOrder(_prev: CheckoutState, formData: FormData): Pro
     throw error;
   }
 
+  /*
+    Tell the shop, then send the buyer on. Deliberately not awaited inside the
+    transaction and deliberately unable to throw: an order that exists must not
+    be undone because Telegram was slow or the bot was never connected.
+  */
+  void notifyShop(created, {
+    method: input.deliveryMethod as DeliveryMethod,
+    city: zone?.city ?? null,
+    pickupPointId: input.pickupPointId ?? null,
+  });
+
   revalidatePath('/cart');
   revalidatePath('/', 'layout');
-  redirect(`/order/${number}`);
+  redirect(`/order/${created.number}`);
+}
+
+/** Where the order is going, in the words the shop uses itself. */
+async function deliveryLabel(delivery: {
+  method: DeliveryMethod;
+  city: string | null;
+  pickupPointId: string | null;
+}): Promise<string> {
+  if (delivery.method !== DeliveryMethod.PICKUP) {
+    return delivery.city ? `Доставка — ${delivery.city}` : 'Доставка';
+  }
+
+  if (!delivery.pickupPointId) return 'Самовывоз';
+  const point = await prisma.pickupPoint.findUnique({
+    where: { id: delivery.pickupPointId },
+    select: { name: true, address: true },
+  });
+  return point ? `Самовывоз — ${point.name}, ${point.address}` : 'Самовывоз';
+}
+
+async function notifyShop(
+  order: {
+    number: string;
+    total: number;
+    customerName: string;
+    customerPhone: string;
+    address: string | null;
+    comment: string | null;
+    items: { name: string; size: string; colorName: string; quantity: number; price: number }[];
+  },
+  delivery: { method: DeliveryMethod; city: string | null; pickupPointId: string | null },
+): Promise<void> {
+  try {
+    const site = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://leeboss.vercel.app';
+    const label = await deliveryLabel(delivery);
+    await sendTelegram(orderMessage({ ...order, deliveryLabel: label, siteUrl: site }));
+  } catch (error) {
+    // the order is already placed; a failed notification is a log line, not a failure
+    console.error('не удалось уведомить о заказе', error);
+  }
 }
 
 class OutOfStock extends Error {

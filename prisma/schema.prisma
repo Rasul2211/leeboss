@@ -116,6 +116,17 @@ enum FitType {
   OVERSIZE
 }
 
+/// A setting the shop changes for itself, without a redeploy.
+///
+/// Kept in the database rather than in the environment because the person who
+/// connects the Telegram bot is the shop owner on a phone, not someone with
+/// access to the hosting panel.
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
 model Category {
   id            String        @id @default(cuid())
   slug          String        @unique
