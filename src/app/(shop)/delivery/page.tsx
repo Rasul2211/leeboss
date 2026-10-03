@@ -131,7 +131,7 @@ export default async function DeliveryPage() {
         <h2 className="text-base font-semibold text-ink">Обмен и возврат</h2>
         <p className="mt-2 text-sm leading-relaxed text-ink-muted">
           Если вещь не подошла по размеру, напишите нам в Telegram — договоримся об обмене в
-          магазине. Виртуальная примерка помогает выбрать размер заранее, но окончательное решение
+          магазине. Размер на фотографии и размер на себе — разные вещи, окончательное решение
           всегда за вами, и мы это понимаем.
         </p>
       </section>

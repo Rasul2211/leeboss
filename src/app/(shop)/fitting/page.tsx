@@ -2,61 +2,34 @@ import type { Metadata } from 'next';
 import { unstable_cache } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { STOREFRONT_TAG, STOREFRONT_TTL } from '@/lib/storefront';
-import { FittingRoom } from '@/components/fitting/FittingRoom';
-import { PhotoFittingRoom, type LayerIndex } from '@/components/fitting/PhotoFittingRoom';
-import type { FittingProduct } from '@/components/fitting/ItemPicker';
-import type { Slot } from '@/lib/mannequin/garments';
+import { OutfitBuilder } from '@/components/builder/OutfitBuilder';
+import { ROWS, type BuilderProduct, type Chosen, type RowSlot, type Slot } from '@/lib/outfit';
+import { effectivePrice } from '@/lib/money';
 
 export const metadata: Metadata = {
-  title: 'Виртуальная примерочная',
+  title: 'Соберите образ',
   description:
-    'Выберите телосложение, соберите полный образ из вещей LEEBOSS и добавьте его в корзину одной кнопкой.',
+    'Листайте верх, низ и обувь LEEBOSS, смотрите, как они сочетаются, и берите весь образ одной кнопкой.',
 };
 
 type Search = { look?: string; add?: string };
-type Worn = Partial<Record<Slot, { productId: string; colorKey: string }>>;
 
 /*
   This page reads its query string (?add=, ?look=), so it is rendered per
-  request - but the wardrobe it shows is the same for everyone, and is kept
+  request - but the shelves it shows are the same for everyone, and are kept
   between requests instead of being read from the database each time.
 */
-const KEPT = { tags: [STOREFRONT_TAG], revalidate: STOREFRONT_TTL };
+const loadProducts = unstable_cache(readProducts, ['builder-products'], {
+  tags: [STOREFRONT_TAG],
+  revalidate: STOREFRONT_TTL,
+});
 
-const loadProducts = unstable_cache(readProducts, ['fitting-products'], KEPT);
-
-const loadBodies = unstable_cache(
-  async () =>
-    prisma.fittingBody.findMany({
-      where: { isActive: true },
-      orderBy: { sortOrder: 'asc' },
-      select: {
-        id: true,
-        bodyType: true,
-        label: true,
-        imageUrl: true,
-        width: true,
-        height: true,
-      },
-    }),
-  ['fitting-bodies'],
-  KEPT,
-);
-
-const loadLayers = unstable_cache(
-  async () =>
-    prisma.fittingLayer.findMany({
-      select: { productId: true, bodyId: true, imageUrl: true },
-    }),
-  ['fitting-layers'],
-  KEPT,
-);
-
-async function readProducts(): Promise<FittingProduct[]> {
+async function readProducts(): Promise<BuilderProduct[]> {
   const rows = await prisma.product.findMany({
-    // an outfit is a whole look in one line: it has no place on the mannequin
+    // an outfit is a whole look in one line: it has no place in a strip of
+    // single garments
     where: { isActive: true, isOutfit: false },
-    orderBy: [{ mannequinSlot: 'asc' }, { price: 'asc' }],
+    orderBy: { createdAt: 'desc' },
     select: {
       id: true,
       slug: true,
@@ -65,104 +38,62 @@ async function readProducts(): Promise<FittingProduct[]> {
       price: true,
       salePrice: true,
       mannequinSlot: true,
-      fitType: true,
-      category: { select: { name: true } },
       images: { select: { url: true }, orderBy: { sortOrder: 'asc' }, take: 1 },
       colors: { select: { key: true, name: true, hex: true }, orderBy: { sortOrder: 'asc' } },
-      variants: { select: { stock: true } },
+      variants: { where: { stock: { gt: 0 } }, select: { size: true, color: { select: { key: true } } } },
     },
   });
 
-  return rows.map((row) => ({
-    id: row.id,
-    slug: row.slug,
-    name: row.name,
-    brand: row.brand,
-    price: row.salePrice ?? row.price,
-    subcategory: row.category.name,
-    slot: row.mannequinSlot as Slot,
-    fit: row.fitType,
-    image: row.images[0]?.url ?? null,
-    colors: row.colors,
-    inStock: row.variants.some((v) => v.stock > 0),
-  }));
+  // a strip shows a photograph and sells what is in it: no photo or no stock,
+  // no place in the strip
+  return rows.flatMap((row) => {
+    const image = row.images[0]?.url;
+    if (!image || row.variants.length === 0) return [];
+    return [
+      {
+        id: row.id,
+        slug: row.slug,
+        name: row.name,
+        brand: row.brand,
+        price: effectivePrice(row.price, row.salePrice),
+        slot: row.mannequinSlot as Slot,
+        image,
+        colors: row.colors,
+        variants: row.variants.map((variant) => ({ colorKey: variant.color.key, size: variant.size })),
+      },
+    ];
+  });
 }
 
-async function resolveInitial(params: Search, products: FittingProduct[]) {
-  const worn: Worn = {};
-  let slot: Slot = 'TOP';
+const isRow = (slot: string): slot is RowSlot => ROWS.some((row) => row.slot === slot);
+
+async function resolveInitial(params: Search, products: BuilderProduct[]) {
+  const initial: Partial<Record<RowSlot, Chosen>> = {};
 
   if (params.look) {
     const look = await prisma.look.findUnique({
       where: { id: params.look },
-      select: {
-        items: {
-          select: {
-            slot: true,
-            colorKey: true,
-            product: {
-              select: {
-                id: true,
-                colors: { select: { key: true }, orderBy: { sortOrder: 'asc' }, take: 1 },
-              },
-            },
-          },
-        },
-      },
+      select: { items: { select: { slot: true, colorKey: true, productId: true } } },
     });
-
     for (const item of look?.items ?? []) {
-      worn[item.slot as Slot] = {
-        productId: item.product.id,
-        colorKey: item.colorKey ?? item.product.colors[0]?.key ?? '',
-      };
+      if (isRow(item.slot)) initial[item.slot] = { productId: item.productId, colorKey: item.colorKey ?? '' };
     }
   }
 
   if (params.add) {
     const product = products.find((p) => p.slug === params.add);
-    if (product) {
-      worn[product.slot] = { productId: product.id, colorKey: product.colors[0]?.key ?? '' };
-      slot = product.slot;
+    if (product && isRow(product.slot)) {
+      initial[product.slot] = { productId: product.id, colorKey: product.colors[0]?.key ?? '' };
     }
   }
 
-  return { worn, slot };
+  return initial;
 }
 
-export default async function FittingPage({ searchParams }: { searchParams: Promise<Search> }) {
-  const [params, products, bodies] = await Promise.all([
-    searchParams,
-    loadProducts(),
-    loadBodies(),
-  ]);
+export default async function BuilderPage({ searchParams }: { searchParams: Promise<Search> }) {
+  const [params, products] = await Promise.all([searchParams, loadProducts()]);
+  const initial = await resolveInitial(params, products);
 
-  const { worn, slot } = await resolveInitial(params, products);
-
-  /*
-    Photographs win when there are any, because a real garment on a real body
-    beats anything generated. Until the shoot is done the procedural mannequin
-    stands in, so the room never sits empty and nothing regresses while the
-    photos are being taken.
-  */
-  if (bodies.length === 0) {
-    return <FittingRoom products={products} initialWorn={worn} initialSlot={slot} />;
-  }
-
-  const layerRows = await loadLayers();
-
-  const layers: LayerIndex = {};
-  for (const row of layerRows) {
-    (layers[row.productId] ??= {})[row.bodyId] = row.imageUrl;
-  }
-
-  return (
-    <PhotoFittingRoom
-      bodies={bodies}
-      products={products}
-      layers={layers}
-      initialWorn={worn}
-      initialSlot={slot}
-    />
-  );
+  // the builder keeps its own state; a new address must start it afresh
+  return <OutfitBuilder key={`${params.look ?? ''}|${params.add ?? ''}`} products={products} initial={initial} />;
 }

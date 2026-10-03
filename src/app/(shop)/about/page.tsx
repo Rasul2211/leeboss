@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 export const metadata: Metadata = {
   title: 'О магазине',
   description:
-    'LEEBOSS — магазин мужской одежды в Душанбе: два зала, каталог с виртуальной примеркой и доставка по Таджикистану.',
+    'LEEBOSS — магазин мужской одежды в Душанбе: два зала, готовые образы и доставка по Таджикистану.',
 };
 
 export default async function AboutPage() {
@@ -25,7 +25,7 @@ export default async function AboutPage() {
       <p className="mt-4 text-base leading-relaxed text-ink-muted">
         LEEBOSS — магазин мужской одежды в Душанбе. Мы собираем повседневный гардероб: футболки и
         тениски, брюки и джинсы, кроссовки, кепки и шапки. В двух залах можно всё померить руками,
-        а на сайте — на виртуальном манекене.
+        а на сайте — собрать из этих вещей образ и забрать его целиком.
       </p>
 
       <div className="relative mt-8 aspect-16/9 overflow-hidden rounded-card bg-surface-alt">
@@ -47,16 +47,11 @@ export default async function AboutPage() {
       </dl>
 
       <section className="mt-10">
-        <h2 className="text-base font-semibold text-ink">Зачем мы сделали примерочную</h2>
+        <h2 className="text-base font-semibold text-ink">Образ целиком, а не вещь по одной</h2>
         <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-          Самая частая причина возврата — вещь не села. Фотография на модели ростом 185 мало что
-          говорит покупателю ростом 170. Поэтому мы сделали манекен, который строится по вашим
-          параметрам: рост, вес, телосложение и размер. Одежда на нём — не картинка, а объёмная
-          вещь, которая пересобирается под фигуру, и её видно со всех сторон.
-        </p>
-        <p className="mt-3 text-sm leading-relaxed text-ink-muted">
-          Манекен намеренно безликий, как витринный: так проще примерить образ на себя, а не на
-          чужого человека.
+          Вещь редко покупают саму по себе: к брюкам нужен верх, к верху — обувь. Поэтому в залах мы
+          собираем и снимаем готовые образы, а на сайте можно собрать свой: листаете верх, низ и
+          обувь, пока они не сойдутся, и берёте всё одной кнопкой.
         </p>
       </section>
 
@@ -77,7 +72,7 @@ export default async function AboutPage() {
 
       <div className="mt-10 flex flex-wrap gap-3">
         <Button asChild>
-          <Link href="/fitting">Открыть примерочную</Link>
+          <Link href="/fitting">Собрать образ</Link>
         </Button>
         <Button asChild variant="outline">
           <Link href="/contacts">Контакты</Link>

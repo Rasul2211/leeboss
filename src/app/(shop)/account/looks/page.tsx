@@ -37,13 +37,13 @@ export default async function AccountLooksPage() {
         <Shirt className="mx-auto size-8 text-ink-faint" aria-hidden />
         <p className="mt-4 text-sm font-medium text-ink">Сохранённых образов нет</p>
         <p className="mx-auto mt-1 max-w-sm text-sm text-ink-muted">
-          Соберите образ на манекене в примерочной и нажмите «Сохранить образ» — он появится здесь.
+          Соберите образ из верха, низа и обуви и нажмите «Сохранить образ» — он появится здесь.
         </p>
         <Link
           href="/fitting"
           className="mt-5 inline-block text-sm font-medium text-brand hover:text-brand-hover"
         >
-          В примерочную
+          Собрать образ
         </Link>
       </div>
     );

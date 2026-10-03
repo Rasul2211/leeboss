@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: product.name,
     description:
       product.description ??
-      `${product.name} — ${formatPrice(price)}. Купить в LEEBOSS, Душанбе, с примеркой на виртуальном манекене.`,
+      `${product.name} — ${formatPrice(price)}. Купить в LEEBOSS, Душанбе: самовывоз из двух залов или доставка.`,
     openGraph: { images: product.images[0]?.url ? [product.images[0].url] : [] },
   };
 }
@@ -150,7 +150,7 @@ export default async function ProductPage({ params }: Props) {
 
               <div className="mt-4">
                 <Button asChild variant="outline" size="lg" className="w-full">
-                  <Link href={`/fitting?add=${product.slug}`}>Примерить на манекене</Link>
+                  <Link href={`/fitting?add=${product.slug}`}>Собрать с этим образ</Link>
                 </Button>
               </div>
             </>

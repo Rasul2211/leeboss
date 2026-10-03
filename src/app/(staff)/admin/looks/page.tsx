@@ -34,7 +34,7 @@ export default async function LooksPage() {
     <>
       <StaffHeader
         title="Образы"
-        description="Готовые образы для главной и примерочной, плюс то, что собрали клиенты."
+        description="Готовые образы для главной, плюс то, что собрали клиенты."
       />
       <LooksPanel
         looks={looks.map((look) => ({

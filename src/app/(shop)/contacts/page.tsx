@@ -76,7 +76,7 @@ export default async function ContactsPage() {
         </Link>{' '}
         или{' '}
         <Link href="/fitting" className="font-medium text-brand hover:text-brand-hover">
-          примерьте на манекене
+          соберите образ
         </Link>
         .
       </p>

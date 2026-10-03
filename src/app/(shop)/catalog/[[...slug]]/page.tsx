@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   return {
     title: category ? category.name : 'Каталог',
     description: category
-      ? `${category.name} в магазине LEEBOSS, Душанбе. Примерьте на виртуальном манекене перед покупкой.`
+      ? `${category.name} в магазине LEEBOSS, Душанбе. Самовывоз из двух залов или доставка по Таджикистану.`
       : 'Каталог мужской одежды и обуви LEEBOSS в Душанбе.',
   };
 }

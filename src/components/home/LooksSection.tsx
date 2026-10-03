@@ -18,8 +18,7 @@ export function LooksSection({ looks }: { looks: Look[] }) {
         Соберите образ сами
       </h2>
       <p className="mt-2 max-w-xl text-sm text-ink-muted">
-        Сочетания из вещей, которые есть в магазине. Откройте любое в примерочной и поменяйте в нём
-        что угодно.
+        Сочетания из вещей, которые есть в магазине. Откройте любое и поменяйте в нём что угодно.
       </p>
 
       <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">

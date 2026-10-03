@@ -81,7 +81,7 @@ function LookCard({ look }: { look: LookRow }) {
           href={`/fitting?look=${look.id}`}
           className="text-xs text-brand hover:text-brand-hover"
         >
-          В примерочной
+          Открыть на сайте
         </Link>
       </div>
     </li>

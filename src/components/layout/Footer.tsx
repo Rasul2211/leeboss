@@ -14,7 +14,7 @@ const HELP_LINKS = [
   { href: '/about', label: 'О магазине' },
   { href: '/delivery', label: 'Доставка и оплата' },
   { href: '/contacts', label: 'Контакты и адреса' },
-  { href: '/fitting', label: 'Виртуальная примерка' },
+  { href: '/fitting', label: 'Собрать образ' },
   { href: '/looks', label: 'Готовые образы' },
 ];
 
@@ -27,8 +27,8 @@ export async function Footer() {
         <div>
           <Logo height={26} />
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-muted">
-            Магазин мужской одежды в Душанбе. Два зала, живая примерка офлайн и виртуальный манекен
-            онлайн.
+            Магазин мужской одежды в Душанбе. Два зала, где всё можно примерить, и сайт, где образ
+            собирается за минуту.
           </p>
           <a
             href="https://t.me/leebosstj"

@@ -21,14 +21,14 @@ export default async function CartPage() {
         <ShoppingBag className="mx-auto size-10 text-ink-faint" aria-hidden />
         <h1 className="mt-5 text-2xl font-semibold text-ink">Корзина пуста</h1>
         <p className="mt-2 text-sm text-ink-muted">
-          Загляните в каталог или соберите образ на виртуальном манекене.
+          Загляните в каталог или соберите образ из верха, низа и обуви.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Button asChild>
             <Link href="/catalog">В каталог</Link>
           </Button>
           <Button asChild variant="outline">
-            <Link href="/fitting">В примерочную</Link>
+            <Link href="/fitting">Собрать образ</Link>
           </Button>
         </div>
       </div>

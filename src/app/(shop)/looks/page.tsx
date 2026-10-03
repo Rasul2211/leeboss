@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 export const metadata: Metadata = {
   title: 'Готовые образы',
   description:
-    'Собранные образы из вещей LEEBOSS: откройте любой в виртуальной примерочной или добавьте целиком в корзину.',
+    'Собранные образы из вещей LEEBOSS: откройте любой, поменяйте в нём что угодно или добавьте целиком в корзину.',
 };
 
 export default async function LooksPage() {
@@ -21,10 +21,10 @@ export default async function LooksPage() {
         <Shirt className="mx-auto size-9 text-ink-faint" aria-hidden />
         <h1 className="mt-5 text-2xl font-semibold text-ink">Образов пока нет</h1>
         <p className="mt-2 text-sm text-ink-muted">
-          Соберите свой в примерочной — манекен подстроится под ваши параметры.
+          Соберите свой: листайте верх, низ и обувь, пока они не сойдутся.
         </p>
         <Button asChild className="mt-6">
-          <Link href="/fitting">В примерочную</Link>
+          <Link href="/fitting">Собрать образ</Link>
         </Button>
       </div>
     );
@@ -34,8 +34,8 @@ export default async function LooksPage() {
     <div className="mx-auto max-w-7xl px-4 py-10">
       <h1 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">Готовые образы</h1>
       <p className="mt-2 max-w-xl text-sm text-ink-muted">
-        Каждый образ собран из вещей, которые есть в магазине. Откройте его в примерочной, чтобы
-        посмотреть на манекене со своими параметрами.
+        Каждый образ собран из вещей, которые есть в магазине. Откройте его, чтобы поменять в нём
+        любую вещь на другую.
       </p>
 
       <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

@@ -17,7 +17,7 @@ type Section = {
 
 const MORE_LINKS = [
   { href: '/catalog', label: 'Весь каталог' },
-  { href: '/fitting', label: 'Виртуальная примерка' },
+  { href: '/fitting', label: 'Собрать образ' },
   { href: '/looks', label: 'Готовые образы' },
   { href: '/delivery', label: 'Доставка и оплата' },
   { href: '/contacts', label: 'Контакты и адреса' },

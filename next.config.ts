@@ -20,8 +20,7 @@ const config: NextConfig = {
     remotePatterns: [{ protocol: 'https', hostname: '*.public.blob.vercel-storage.com' }],
   },
   experimental: {
-    // three.js ships large ES modules; keep them out of the server bundle graph
-    optimizePackageImports: ['lucide-react', '@react-three/drei'],
+    optimizePackageImports: ['lucide-react'],
   },
 };
 

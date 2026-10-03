@@ -32,7 +32,7 @@ export async function Header() {
             Образы
           </Link>
           <Link href="/fitting" className="font-medium text-brand hover:text-brand-hover">
-            Виртуальная примерка
+            Собрать образ
           </Link>
           <StaffLink />
         </div>
