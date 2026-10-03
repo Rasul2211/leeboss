@@ -101,9 +101,6 @@ export function FittingRoom({ products, initialWorn = {}, initialSlot = 'TOP' }:
         fit: product.fit,
         size,
         hex: color?.hex ?? '#888888',
-        // the swatch is cut from the product's own photograph and named after
-        // its slug, so a missing one simply falls back to flat colour
-        swatch: `/swatches/${product.slug}.jpg`,
       });
     }
     return out;

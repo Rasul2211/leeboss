@@ -23,7 +23,7 @@ export function Studio() {
         {/* the room itself: a dim shell so nothing is ever lit from nowhere */}
         <mesh scale={12}>
           <sphereGeometry args={[1, 32, 16]} />
-          <meshBasicMaterial color="#42403e" side={1} />
+          <meshBasicMaterial color="#6a6763" side={1} />
         </mesh>
 
         {/* key soft box, high and front right */}

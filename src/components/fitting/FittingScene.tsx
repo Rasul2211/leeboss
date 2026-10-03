@@ -5,12 +5,11 @@ import { Canvas } from '@react-three/fiber';
 import { ContactShadows, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
-import { Mannequin } from '@/components/fitting/Mannequin';
-import { Garment, type WornItem } from '@/components/fitting/Garment';
+import { Figure } from '@/components/fitting/Figure';
+import type { WornItem } from '@/components/fitting/Garment';
 import { Studio } from '@/components/fitting/Studio';
-import { buildProfile, type BodyParams } from '@/lib/mannequin/measurements';
+import { clampBody, type BodyParams } from '@/lib/mannequin/measurements';
 import { PollingResizeObserver } from '@/lib/mannequin/resize-observer';
-import type { Slot } from '@/lib/mannequin/garments';
 
 export type ViewAngle = 'front' | 'side' | 'back';
 
@@ -21,9 +20,6 @@ const VIEW_AZIMUTH: Record<ViewAngle, number> = {
   back: Math.PI,
 };
 
-/** Draw order on the body: an outer layer must sit over the layer beneath it. */
-const SLOT_ORDER: Slot[] = ['BOTTOM', 'TOP', 'OUTERWEAR', 'SHOES', 'HEADWEAR', 'ACCESSORY'];
-
 const FOV = 30;
 
 type Props = {
@@ -33,13 +29,8 @@ type Props = {
 };
 
 export function FittingScene({ body, worn, view }: Props) {
-  const profile = useMemo(() => buildProfile(body), [body]);
+  const heightM = useMemo(() => clampBody(body).height / 100, [body]);
   const controls = useRef<OrbitControlsImpl>(null);
-
-  const ordered = useMemo(
-    () => [...worn].sort((a, b) => SLOT_ORDER.indexOf(a.slot) - SLOT_ORDER.indexOf(b.slot)),
-    [worn],
-  );
 
   // the preset buttons drive the same controls the user drags, so the two
   // never disagree about where the camera is
@@ -57,8 +48,8 @@ export function FittingScene({ body, worn, view }: Props) {
     as breathing room fixes the distance exactly.
   */
   const halfFov = (FOV / 2) * (Math.PI / 180);
-  const centreY = profile.heightM * 0.5;
-  const distance = (profile.heightM * 1.2) / 2 / Math.tan(halfFov);
+  const centreY = heightM * 0.5;
+  const distance = (heightM * 1.2) / 2 / Math.tan(halfFov);
 
   return (
     <Canvas
@@ -83,16 +74,13 @@ export function FittingScene({ body, worn, view }: Props) {
       <Studio />
 
       <Suspense fallback={null}>
-        {/* the profile is built with the feet at y = 0, so it needs no offset */}
-        <Mannequin body={profile} />
-        {ordered.map((item) => (
-          <Garment key={`${item.slot}-${item.productId}`} item={item} body={profile} />
-        ))}
+        {/* the figure is built with its feet at y = 0, so it needs no offset */}
+        <Figure body={body} worn={worn} />
 
         <ContactShadows
           position={[0, 0.001, 0]}
           opacity={0.5}
-          scale={profile.heightM * 1.5}
+          scale={heightM * 1.5}
           blur={2.8}
           far={0.9}
           resolution={1024}
@@ -103,8 +91,8 @@ export function FittingScene({ body, worn, view }: Props) {
         ref={controls}
         target={[0, centreY, 0]}
         enablePan={false}
-        minDistance={profile.heightM * 0.7}
-        maxDistance={profile.heightM * 3.2}
+        minDistance={heightM * 0.7}
+        maxDistance={heightM * 3.2}
         minPolarAngle={Math.PI * 0.2}
         maxPolarAngle={Math.PI * 0.6}
         enableDamping
