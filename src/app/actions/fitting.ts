@@ -1,9 +1,8 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
-import { ensureCartId } from '@/lib/cart';
+import { countCartItems, ensureCartId } from '@/lib/cart';
 
 const schema = z.array(
   z.object({
@@ -14,7 +13,7 @@ const schema = z.array(
 ).min(1).max(8);
 
 export type OutfitResult =
-  | { ok: true; added: number; skipped: number }
+  | { ok: true; count: number; added: number; skipped: number }
   | { ok: false; message: string };
 
 /**
@@ -76,7 +75,5 @@ export async function addOutfitToCart(
     added += 1;
   }
 
-  revalidatePath('/cart');
-  revalidatePath('/', 'layout');
-  return { ok: true, added, skipped };
+  return { ok: true, count: await countCartItems(cartId), added, skipped };
 }

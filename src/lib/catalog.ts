@@ -1,6 +1,12 @@
 import 'server-only';
+import { cache } from 'react';
+import { unstable_cache } from 'next/cache';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
+import { STOREFRONT_TAG, STOREFRONT_TTL } from '@/lib/storefront';
+import { type SortKey } from '@/lib/catalog-url';
+
+export { isSortKey, type SortKey } from '@/lib/catalog-url';
 
 /** Shape every product grid renders from. */
 export const productCardSelect = {
@@ -21,9 +27,7 @@ export const SORTS = {
   cheap: { price: 'asc' },
   expensive: { price: 'desc' },
   name: { name: 'asc' },
-} as const satisfies Record<string, Prisma.ProductOrderByWithRelationInput>;
-
-export type SortKey = keyof typeof SORTS;
+} as const satisfies Record<SortKey, Prisma.ProductOrderByWithRelationInput>;
 
 export const SORT_LABELS: Record<SortKey, string> = {
   new: 'Сначала новые',
@@ -32,12 +36,19 @@ export const SORT_LABELS: Record<SortKey, string> = {
   name: 'По названию',
 };
 
-export function isSortKey(value: string | undefined): value is SortKey {
-  return value != null && value in SORTS;
-}
+/**
+ * Top-level sections with their subcategories, for the header menu and catalogue rail.
+ *
+ * Kept between requests: the header is on every page, including the ones that
+ * cannot be prerendered (basket, checkout, account), and none of them should
+ * wait on the database for a menu that changes a few times a year.
+ */
+export const getCategoryTree = unstable_cache(loadCategoryTree, ['category-tree'], {
+  tags: [STOREFRONT_TAG],
+  revalidate: STOREFRONT_TTL,
+});
 
-/** Top-level sections with their subcategories, for the header menu and catalogue rail. */
-export async function getCategoryTree() {
+async function loadCategoryTree() {
   return prisma.category.findMany({
     where: { parentId: null, isActive: true },
     orderBy: { sortOrder: 'asc' },
@@ -124,7 +135,8 @@ export async function listProducts({
   return { items, total, page, perPage, pages: Math.max(1, Math.ceil(total / perPage)) };
 }
 
-export async function getProductBySlug(slug: string) {
+/** Once per render: the page and its metadata both ask for the same product. */
+export const getProductBySlug = cache(async (slug: string) => {
   return prisma.product.findFirst({
     where: { slug, isActive: true },
     include: {
@@ -140,7 +152,37 @@ export async function getProductBySlug(slug: string) {
       },
     },
   });
-}
+});
+
+/** A category by its address, with what the catalogue page needs around it. */
+export const getCategoryBySlug = cache(async (slug: string) => {
+  return prisma.category.findFirst({
+    where: { slug, isActive: true },
+    select: {
+      id: true,
+      slug: true,
+      name: true,
+      parent: { select: { slug: true, name: true } },
+      children: {
+        where: { isActive: true },
+        orderBy: { sortOrder: 'asc' },
+        select: { slug: true, name: true },
+      },
+    },
+  });
+});
+
+/** The shop's two halls, for the footer and the contact pages. */
+export const getPickupPoints = unstable_cache(
+  async () =>
+    prisma.pickupPoint.findMany({
+      where: { isActive: true },
+      orderBy: { name: 'asc' },
+      select: { id: true, name: true, address: true, hoursFrom: true, hoursTo: true },
+    }),
+  ['pickup-points'],
+  { tags: [STOREFRONT_TAG], revalidate: STOREFRONT_TTL },
+);
 
 export async function getNewArrivals(take = 6) {
   return prisma.product.findMany({

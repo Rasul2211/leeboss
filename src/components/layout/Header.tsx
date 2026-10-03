@@ -1,21 +1,23 @@
 import Link from 'next/link';
-import { MapPin, ShoppingCart, User } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { Logo } from '@/components/brand/Logo';
 import { CategoryMenu } from '@/components/layout/CategoryMenu';
 import { SearchBar } from '@/components/layout/SearchBar';
+import { HeaderAccount, StaffLink } from '@/components/layout/HeaderAccount';
 import { getCategoryTree } from '@/lib/catalog';
-import { getCartCount } from '@/lib/cart';
-import { getCurrentUser, isStaff } from '@/lib/auth';
 
+/**
+ * Nothing here reads the visitor's cookies. The header sits on every page, and
+ * one cookie read in it would make every page be rendered per request; the
+ * account link and the basket badge fill themselves in from the browser.
+ */
 export async function Header() {
-  const [tree, cartCount, user] = await Promise.all([
-    getCategoryTree(),
-    getCartCount(),
-    getCurrentUser(),
-  ]);
+  const tree = await getCategoryTree();
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-white/95 backdrop-blur-sm">
+    // solid, not blurred: a backdrop filter under a sticky bar is repainted on
+    // every scrolled frame, and cheap phones drop frames over it
+    <header className="sticky top-0 z-50 border-b border-line bg-white">
       {/* thin utility strip: location and the two shortcuts worth a permanent slot */}
       <div className="hidden border-b border-line/70 md:block">
         <div className="mx-auto flex h-9 max-w-7xl items-center gap-6 px-4 text-xs text-ink-muted">
@@ -23,7 +25,7 @@ export async function Header() {
             <MapPin className="size-3.5" aria-hidden />
             Душанбе
           </span>
-          <Link href="/catalog?sort=new" className="hover:text-ink">
+          <Link href="/catalog" className="hover:text-ink">
             Новинки
           </Link>
           <Link href="/looks" className="hover:text-ink">
@@ -32,11 +34,7 @@ export async function Header() {
           <Link href="/fitting" className="font-medium text-brand hover:text-brand-hover">
             Виртуальная примерка
           </Link>
-          {isStaff(user) ? (
-            <Link href="/admin" className="ml-auto hover:text-ink">
-              Панель управления
-            </Link>
-          ) : null}
+          <StaffLink />
         </div>
       </div>
 
@@ -60,28 +58,7 @@ export async function Header() {
             Адреса
           </Link>
 
-          <Link
-            href={user ? '/account' : '/login'}
-            className="flex flex-col items-center px-2 text-[11px] text-ink-muted hover:text-ink"
-          >
-            <User className="size-5" aria-hidden />
-            <span className="hidden sm:block">{user ? user.name.split(' ')[0] : 'Войти'}</span>
-          </Link>
-
-          <Link
-            href="/cart"
-            className="relative flex flex-col items-center px-2 text-[11px] text-ink-muted hover:text-ink"
-          >
-            <span className="relative">
-              <ShoppingCart className="size-5" aria-hidden />
-              {cartCount > 0 ? (
-                <span className="absolute -right-2 -top-1.5 grid min-w-4 place-items-center rounded-full bg-brand px-1 text-[10px] font-semibold leading-4 text-white">
-                  {cartCount > 99 ? '99+' : cartCount}
-                </span>
-              ) : null}
-            </span>
-            <span className="hidden sm:block">Корзина</span>
-          </Link>
+          <HeaderAccount />
         </nav>
       </div>
     </header>

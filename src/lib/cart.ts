@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { randomUUID } from 'node:crypto';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
+import { GUEST_MARK } from '@/lib/auth/session';
 import { effectivePrice } from '@/lib/money';
 
 /*
@@ -79,6 +80,7 @@ export async function ensureCartId(): Promise<string> {
       path: '/',
       maxAge: MAX_AGE,
     });
+    jar.delete(GUEST_MARK);
   }
   const created = await prisma.cart.create({ data: { sessionId }, select: { id: true } });
   return created.id;
@@ -94,9 +96,30 @@ export async function getCartItems() {
   });
 }
 
+/**
+ * How many things are in the basket, in one query.
+ *
+ * A visitor with neither a session nor a basket cookie costs no query at all,
+ * and that is most visitors.
+ */
+/** Whether this browser carries a guest basket cookie at all. */
+export async function hasGuestCart(): Promise<boolean> {
+  return Boolean((await cookies()).get(COOKIE)?.value);
+}
+
 export async function getCartCount(): Promise<number> {
-  const cartId = await findCartId();
-  if (!cartId) return 0;
+  const user = await getCurrentUser();
+  const sessionId = user ? null : (await cookies()).get(COOKIE)?.value;
+  if (!user && !sessionId) return 0;
+
+  const result = await prisma.cartItem.aggregate({
+    where: { cart: user ? { userId: user.id } : { sessionId: sessionId! } },
+    _sum: { quantity: true },
+  });
+  return result._sum.quantity ?? 0;
+}
+
+export async function countCartItems(cartId: string): Promise<number> {
   const result = await prisma.cartItem.aggregate({ where: { cartId }, _sum: { quantity: true } });
   return result._sum.quantity ?? 0;
 }

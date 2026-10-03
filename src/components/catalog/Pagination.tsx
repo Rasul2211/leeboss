@@ -1,22 +1,23 @@
-'use client';
-
 import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { catalogHref, type SortKey } from '@/lib/catalog-url';
 import { cn } from '@/lib/utils';
 
-export function Pagination({ page, pages }: { page: number; pages: number }) {
-  const pathname = usePathname();
-  const params = useSearchParams();
-
+export function Pagination({
+  page,
+  pages,
+  category,
+  sort,
+}: {
+  page: number;
+  pages: number;
+  category?: string;
+  sort: SortKey;
+}) {
   if (pages <= 1) return null;
 
   function hrefFor(target: number) {
-    const next = new URLSearchParams(params);
-    if (target <= 1) next.delete('page');
-    else next.set('page', String(target));
-    const query = next.toString();
-    return query ? `${pathname}?${query}` : pathname;
+    return catalogHref({ category, sort, page: target });
   }
 
   // a compact window around the current page keeps the control usable on phones

@@ -143,7 +143,12 @@ export async function createOrder(_prev: CheckoutState, formData: FormData): Pro
   });
 
   revalidatePath('/cart');
-  revalidatePath('/', 'layout');
+  // The order took stock off the shelf, and a product page shows which sizes
+  // are left. Only the pages of what was bought are rebuilt: throwing the whole
+  // shop window away on every order would make the next visitor wait for it.
+  for (const slug of new Set(items.map((item) => item.variant.product.slug))) {
+    revalidatePath(`/product/${slug}`);
+  }
   redirect(`/order/${created.number}`);
 }
 

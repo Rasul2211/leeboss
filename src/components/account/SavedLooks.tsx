@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Loader2, ShoppingBag, Trash2 } from 'lucide-react';
 import { deleteLook } from '@/app/actions/account';
 import { addLookToCart } from '@/app/actions/cart';
+import { useShopSession } from '@/components/shop/ShopSession';
 import { formatPrice } from '@/lib/money';
 import { Button } from '@/components/ui/button';
 
@@ -30,6 +31,7 @@ export function SavedLooks({ looks }: { looks: SavedLook[] }) {
 
 function LookCard({ look }: { look: SavedLook }) {
   const router = useRouter();
+  const { setCartCount } = useShopSession();
   const [pending, start] = useTransition();
   const [notice, setNotice] = useState<string | null>(null);
 
@@ -76,7 +78,7 @@ function LookCard({ look }: { look: SavedLook }) {
                     ? `Добавлено ${result.added}, нет в наличии ${result.skipped}`
                     : `Добавлено ${result.added}`,
                 );
-                router.refresh();
+                setCartCount(result.count);
               } else {
                 setNotice(result.message);
               }

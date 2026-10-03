@@ -3,9 +3,15 @@
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
-import { ensureCartId, findCartId } from '@/lib/cart';
+import { countCartItems, ensureCartId, findCartId } from '@/lib/cart';
 
-export type CartResult = { ok: true } | { ok: false; message: string };
+/**
+ * `count` is the basket total after the change. The header badge is drawn in
+ * the browser, so it is handed the new number here instead of the whole layout
+ * being re-rendered - which, now that the shop window is cached, would also
+ * throw that cache away on every tap of "add to basket".
+ */
+export type CartResult = { ok: true; count: number } | { ok: false; message: string };
 
 const addSchema = z.object({
   variantId: z.string().min(1),
@@ -26,15 +32,18 @@ export async function addToCart(
   });
   if (!parsed.success) return { ok: false, message: 'Некорректные данные' };
 
-  const variant = await prisma.productVariant.findUnique({
-    where: { id: parsed.data.variantId },
-    select: { id: true, stock: true, product: { select: { isActive: true } } },
-  });
+  // the two lookups do not depend on each other, and each is a round trip
+  const [variant, cartId] = await Promise.all([
+    prisma.productVariant.findUnique({
+      where: { id: parsed.data.variantId },
+      select: { id: true, stock: true, product: { select: { isActive: true } } },
+    }),
+    ensureCartId(),
+  ]);
 
   if (!variant || !variant.product.isActive) return { ok: false, message: 'Товар недоступен' };
   if (variant.stock < 1) return { ok: false, message: 'Этого размера сейчас нет в наличии' };
 
-  const cartId = await ensureCartId();
   const { sizeNote } = parsed.data;
   const existing = await prisma.cartItem.findUnique({
     where: { cartId_variantId_sizeNote: { cartId, variantId: variant.id, sizeNote } },
@@ -52,13 +61,15 @@ export async function addToCart(
     create: { cartId, variantId: variant.id, quantity: parsed.data.quantity, sizeNote },
   });
 
-  revalidatePath('/cart');
-  revalidatePath('/', 'layout'); // the header badge lives in the layout
-  return { ok: true };
+  // nothing is revalidated: the basket page is rendered per request anyway, and
+  // revalidating from here would make this tap wait for a page re-render
+  return { ok: true, count: await countCartItems(cartId) };
 }
 
 /** Adds every in-stock piece of a saved look in one go. */
-export async function addLookToCart(lookId: string): Promise<CartResult & { added?: number; skipped?: number }> {
+export async function addLookToCart(
+  lookId: string,
+): Promise<CartResult & { added?: number; skipped?: number }> {
   const look = await prisma.look.findUnique({
     where: { id: lookId },
     select: {
@@ -107,9 +118,7 @@ export async function addLookToCart(lookId: string): Promise<CartResult & { adde
     added += 1;
   }
 
-  revalidatePath('/cart');
-  revalidatePath('/', 'layout');
-  return { ok: true, added, skipped };
+  return { ok: true, count: await countCartItems(cartId), added, skipped };
 }
 
 export async function setCartItemQuantity(itemId: string, quantity: number): Promise<CartResult> {
@@ -132,8 +141,7 @@ export async function setCartItemQuantity(itemId: string, quantity: number): Pro
   }
 
   revalidatePath('/cart');
-  revalidatePath('/', 'layout');
-  return { ok: true };
+  return { ok: true, count: await countCartItems(cartId) };
 }
 
 export async function removeCartItem(itemId: string): Promise<CartResult> {
@@ -142,6 +150,5 @@ export async function removeCartItem(itemId: string): Promise<CartResult> {
 
   await prisma.cartItem.deleteMany({ where: { id: itemId, cartId } });
   revalidatePath('/cart');
-  revalidatePath('/', 'layout');
-  return { ok: true };
+  return { ok: true, count: await countCartItems(cartId) };
 }

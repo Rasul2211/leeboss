@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { refreshStorefront } from '@/lib/storefront';
 import { z } from 'zod';
 import { MannequinSlot, Permission } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
@@ -124,8 +124,7 @@ export async function createProduct(input: unknown): Promise<CatalogResult> {
     });
   }
 
-  revalidatePath('/catalog', 'layout');
-  revalidatePath('/');
+  refreshStorefront();
   return { ok: true, slug: product.slug };
 }
 
@@ -186,8 +185,7 @@ export async function createOutfit(input: unknown): Promise<CatalogResult> {
     });
   }
 
-  revalidatePath('/catalog', 'layout');
-  revalidatePath('/');
+  refreshStorefront();
   return { ok: true, slug: outfit.slug };
 }
 
@@ -213,8 +211,6 @@ export async function setProductPhoto(productId: string, url: string): Promise<C
     }),
   ]);
 
-  revalidatePath(`/product/${product.slug}`);
-  revalidatePath('/catalog', 'layout');
-  revalidatePath('/');
+  refreshStorefront();
   return { ok: true, slug: product.slug };
 }

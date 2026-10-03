@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Bookmark, Loader2, ShoppingBag, Trash2 } from 'lucide-react';
 import { addOutfitToCart } from '@/app/actions/fitting';
+import { useShopSession } from '@/components/shop/ShopSession';
 import { saveLook } from '@/app/actions/account';
 import { formatPrice } from '@/lib/money';
 import { Button } from '@/components/ui/button';
@@ -125,6 +126,8 @@ export function PhotoFittingRoom({
     setWorn((current) => ({ ...current, [product.slot]: { productId: product.id, colorKey } }));
   }, []);
 
+  const { setCartCount } = useShopSession();
+
   function addAll() {
     if (outfit.length === 0) return;
     startTransition(async () => {
@@ -135,6 +138,7 @@ export function PhotoFittingRoom({
           size: 'M',
         })),
       );
+      if (result.ok) setCartCount(result.count);
       setNotice(
         result.ok
           ? result.skipped > 0
@@ -277,7 +281,7 @@ export function PhotoFittingRoom({
                   Добавить весь образ
                 </Button>
                 <Button asChild variant="outline">
-                  <Link href="/cart">Корзина</Link>
+                  <Link href="/cart" prefetch={false}>Корзина</Link>
                 </Button>
               </div>
 

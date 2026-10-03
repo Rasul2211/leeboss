@@ -1,35 +1,37 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { prisma } from '@/lib/prisma';
-import { isSortKey, listProducts, SORT_LABELS } from '@/lib/catalog';
-import { getFavoriteIds } from '@/lib/favorites';
+import { getCategoryBySlug, listProducts, SORT_LABELS } from '@/lib/catalog';
+import { parseCatalogPath } from '@/lib/catalog-url';
 import { ProductGrid } from '@/components/home/Section';
 import { SortSelect } from '@/components/catalog/SortSelect';
 import { Pagination } from '@/components/catalog/Pagination';
 
 type Params = { slug?: string[] };
-type Search = { q?: string; sort?: string; page?: string };
 
-async function resolveCategory(slug: string | undefined) {
-  if (!slug) return null;
-  const category = await prisma.category.findFirst({
-    where: { slug, isActive: true },
-    select: {
-      id: true,
-      slug: true,
-      name: true,
-      parent: { select: { slug: true, name: true } },
-      children: { where: { isActive: true }, orderBy: { sortOrder: 'asc' }, select: { slug: true, name: true } },
-    },
-  });
-  if (!category) notFound();
-  return category;
+/**
+ * Each listing is built the first time someone opens it and then kept. Nothing
+ * here reads the query string or a cookie - that is what lets the page be kept
+ * at all (see lib/catalog-url). Empty for the same reason as on the product
+ * page: the deploy does not build them, scripts/warm.mjs opens them afterwards.
+ */
+export function generateStaticParams(): Params[] {
+  return [];
+}
+
+async function resolve(segments: string[] | undefined) {
+  const view = parseCatalogPath(segments);
+  if (!view) notFound();
+
+  const category = view.category ? await getCategoryBySlug(view.category) : null;
+  if (view.category && !category) notFound();
+
+  return { view, category };
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { slug } = await params;
-  const category = await resolveCategory(slug?.[0]);
+  const { category } = await resolve(slug);
   return {
     title: category ? category.name : 'Каталог',
     description: category
@@ -38,27 +40,19 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   };
 }
 
-export default async function CatalogPage({
-  params,
-  searchParams,
-}: {
-  params: Promise<Params>;
-  searchParams: Promise<Search>;
-}) {
-  const [{ slug }, search] = await Promise.all([params, searchParams]);
-  const category = await resolveCategory(slug?.[0]);
+export default async function CatalogPage({ params }: { params: Promise<Params> }) {
+  const { slug } = await params;
+  const { view, category } = await resolve(slug);
 
-  const sort = isSortKey(search.sort) ? search.sort : 'new';
-  const page = Math.max(1, Number(search.page) || 1);
+  const result = await listProducts({
+    categorySlug: category?.slug,
+    sort: view.sort,
+    page: view.page,
+  });
 
-  const [result, favoriteIds] = await Promise.all([
-    listProducts({ categorySlug: category?.slug, search: search.q, sort, page }),
-    getFavoriteIds(),
-  ]);
-
-  const heading = search.q?.trim()
-    ? `Поиск: «${search.q.trim()}»`
-    : (category?.name ?? 'Весь каталог');
+  // a page past the end is not a page: without this every number would be
+  // built and kept, however large
+  if (view.page > result.pages) notFound();
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
@@ -88,12 +82,12 @@ export default async function CatalogPage({
 
       <div className="mt-4 flex flex-wrap items-baseline justify-between gap-4">
         <h1 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-          {heading}
+          {category?.name ?? 'Весь каталог'}
           <span className="price-figures ml-3 text-sm font-normal text-ink-faint">
             {result.total}
           </span>
         </h1>
-        <SortSelect value={sort} labels={SORT_LABELS} />
+        <SortSelect value={view.sort} category={category?.slug} labels={SORT_LABELS} />
       </div>
 
       {category?.children.length ? (
@@ -114,34 +108,29 @@ export default async function CatalogPage({
       <div className="mt-8">
         {result.items.length > 0 ? (
           <>
-            <ProductGrid products={result.items} favoriteIds={favoriteIds} />
-            <Pagination page={result.page} pages={result.pages} />
+            <ProductGrid products={result.items} eager />
+            <Pagination
+              page={result.page}
+              pages={result.pages}
+              category={category?.slug}
+              sort={view.sort}
+            />
           </>
         ) : (
-          <EmptyState searching={Boolean(search.q?.trim())} />
+          <div className="rounded-card border border-dashed border-line py-20 text-center">
+            <p className="text-base font-medium text-ink">В этом разделе пока нет товаров</p>
+            <p className="mx-auto mt-2 max-w-sm text-sm text-ink-muted">
+              Мы наполняем его прямо сейчас. Загляните в соседние разделы.
+            </p>
+            <Link
+              href="/catalog"
+              className="mt-6 inline-block text-sm font-medium text-brand hover:text-brand-hover"
+            >
+              Весь каталог
+            </Link>
+          </div>
         )}
       </div>
-    </div>
-  );
-}
-
-function EmptyState({ searching }: { searching: boolean }) {
-  return (
-    <div className="rounded-card border border-dashed border-line py-20 text-center">
-      <p className="text-base font-medium text-ink">
-        {searching ? 'Ничего не нашлось' : 'В этом разделе пока нет товаров'}
-      </p>
-      <p className="mx-auto mt-2 max-w-sm text-sm text-ink-muted">
-        {searching
-          ? 'Попробуйте изменить запрос или посмотрите весь каталог.'
-          : 'Мы наполняем его прямо сейчас. Загляните в соседние разделы.'}
-      </p>
-      <Link
-        href="/catalog"
-        className="mt-6 inline-block text-sm font-medium text-brand hover:text-brand-hover"
-      >
-        Весь каталог
-      </Link>
     </div>
   );
 }

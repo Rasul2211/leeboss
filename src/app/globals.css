@@ -32,6 +32,17 @@
     -webkit-text-size-adjust: 100%;
   }
 
+  /* a tap is a tap: the browser need not wait to see whether it becomes a
+     double-tap zoom before it reports the click */
+  a,
+  button,
+  select,
+  label,
+  input,
+  textarea {
+    touch-action: manipulation;
+  }
+
   body {
     background: var(--color-surface);
     color: var(--color-ink);

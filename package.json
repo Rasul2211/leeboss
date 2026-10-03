@@ -22,7 +22,8 @@
     "swatches": "python _assets/make_swatches.py",
     "outfits:check": "python _assets/check_outfits.py",
     "outfits:import": "tsx scripts/import-outfits.ts",
-    "products:import": "tsx scripts/import-new-products.ts"
+    "products:import": "tsx scripts/import-new-products.ts",
+    "warm": "node scripts/warm.mjs"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

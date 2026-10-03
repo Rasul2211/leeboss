@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Logo } from '@/components/brand/Logo';
-import { prisma } from '@/lib/prisma';
+import { getPickupPoints } from '@/lib/catalog';
 
 const SHOP_LINKS = [
   { href: '/catalog', label: 'Весь каталог' },
@@ -19,11 +19,7 @@ const HELP_LINKS = [
 ];
 
 export async function Footer() {
-  const points = await prisma.pickupPoint.findMany({
-    where: { isActive: true },
-    orderBy: { name: 'asc' },
-    select: { id: true, name: true, address: true, hoursFrom: true, hoursTo: true },
-  });
+  const points = await getPickupPoints();
 
   return (
     <footer className="mt-20 border-t border-line bg-surface-alt">

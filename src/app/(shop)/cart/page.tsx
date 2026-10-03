@@ -4,6 +4,7 @@ import { ShoppingBag } from 'lucide-react';
 import { cartSubtotal, getCartItems } from '@/lib/cart';
 import { formatPrice } from '@/lib/money';
 import { CartRow } from '@/components/cart/CartRow';
+import { CartSync } from '@/components/cart/CartSync';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = { title: 'Корзина' };
@@ -11,10 +12,12 @@ export const metadata: Metadata = { title: 'Корзина' };
 export default async function CartPage() {
   const items = await getCartItems();
   const subtotal = cartSubtotal(items);
+  const count = items.reduce((sum, item) => sum + item.quantity, 0);
 
   if (items.length === 0) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-24 text-center">
+        <CartSync count={0} />
         <ShoppingBag className="mx-auto size-10 text-ink-faint" aria-hidden />
         <h1 className="mt-5 text-2xl font-semibold text-ink">Корзина пуста</h1>
         <p className="mt-2 text-sm text-ink-muted">
@@ -34,6 +37,7 @@ export default async function CartPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
+      <CartSync count={count} />
       <h1 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">Корзина</h1>
 
       <div className="mt-8 grid gap-10 lg:grid-cols-[1fr_20rem]">

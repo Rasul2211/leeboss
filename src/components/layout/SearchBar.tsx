@@ -1,18 +1,25 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 
 export function SearchBar() {
-  const params = useSearchParams();
   const router = useRouter();
-  const [value, setValue] = useState(params.get('q') ?? '');
+  const [value, setValue] = useState('');
+
+  // read from the address after mounting, not with useSearchParams: that hook
+  // would force every page carrying the header to be rendered per request
+  useEffect(() => {
+    if (window.location.pathname === '/search') {
+      setValue(new URLSearchParams(window.location.search).get('q') ?? '');
+    }
+  }, []);
 
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const q = value.trim();
-    router.push(q ? `/catalog?q=${encodeURIComponent(q)}` : '/catalog');
+    router.push(q ? `/search?q=${encodeURIComponent(q)}` : '/catalog');
   }
 
   return (

@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Ruler } from 'lucide-react';
 import { getProductBySlug } from '@/lib/catalog';
-import { getFavoriteIds } from '@/lib/favorites';
 import { effectivePrice, formatPrice } from '@/lib/money';
 import { AddToCartForm } from '@/components/product/AddToCartForm';
 import { AddOutfitToCartForm } from '@/components/product/AddOutfitToCartForm';
@@ -12,6 +11,18 @@ import { FavoriteButton } from '@/components/product/FavoriteButton';
 import { Button } from '@/components/ui/button';
 
 type Props = { params: Promise<{ slug: string }> };
+
+/**
+ * A product page is built the first time it is opened and then kept, so every
+ * later visit is a file off the CDN and not a trip to the database.
+ *
+ * The list is deliberately empty: building all of them during a deploy fires a
+ * burst of queries from parallel workers, and a deploy must not hinge on the
+ * connection pool surviving that. scripts/warm.mjs opens them once afterwards.
+ */
+export function generateStaticParams(): { slug: string }[] {
+  return [];
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -33,7 +44,6 @@ export default async function ProductPage({ params }: Props) {
   const product = await getProductBySlug(slug);
   if (!product) notFound();
 
-  const favoriteIds = await getFavoriteIds();
   const price = effectivePrice(product.price, product.salePrice);
   const inStock = product.variants.some((v) => v.stock > 0);
 
@@ -79,11 +89,7 @@ export default async function ProductPage({ params }: Props) {
               <div className="grid h-full place-items-center text-sm text-ink-faint">Нет фото</div>
             )}
           </div>
-          <FavoriteButton
-            productId={product.id}
-            initial={favoriteIds.has(product.id)}
-            className="absolute right-3 top-3"
-          />
+          <FavoriteButton productId={product.id} className="absolute right-3 top-3" />
         </div>
 
         <div>

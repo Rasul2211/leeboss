@@ -1,8 +1,9 @@
 'use client';
 
 import { useMemo, useState, useTransition } from 'react';
-import { Check, Loader2 } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { addToCart } from '@/app/actions/cart';
+import { useShopSession } from '@/components/shop/ShopSession';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -29,6 +30,7 @@ export function AddToCartForm({ colors, variants, sizeType }: Props) {
   const [message, setMessage] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const [pending, startTransition] = useTransition();
+  const { bumpCart, setCartCount } = useShopSession();
 
   // sizes depend on the chosen colour: the same shirt may run out in black only
   const sizesForColor = useMemo(() => {
@@ -58,13 +60,24 @@ export function AddToCartForm({ colors, variants, sizeType }: Props) {
       return;
     }
 
+    if (pending) return;
+
+    // Answer the tap now and let the server catch up. The request crosses an
+    // ocean; a button that waits for it feels broken on a phone. The sizes on
+    // offer were in stock when the page was built, so a refusal is rare, and
+    // when it comes the button and the badge are put back.
+    setMessage(null);
+    setDone(true);
+    bumpCart(1);
+
     startTransition(async () => {
       const result = await addToCart({ variantId });
       if (result.ok) {
-        setDone(true);
-        setMessage(null);
+        setCartCount(result.count);
         setTimeout(() => setDone(false), 2500);
       } else {
+        bumpCart(-1);
+        setDone(false);
         setMessage(result.message);
       }
     });
@@ -128,8 +141,7 @@ export function AddToCartForm({ colors, variants, sizeType }: Props) {
         </fieldset>
       ) : null}
 
-      <Button size="lg" className="w-full" onClick={onSubmit} disabled={pending}>
-        {pending ? <Loader2 className="size-4 animate-spin" aria-hidden /> : null}
+      <Button size="lg" className="w-full" onClick={onSubmit} aria-busy={pending}>
         {done ? <Check className="size-4" aria-hidden /> : null}
         {done ? 'Добавлено в корзину' : 'В корзину'}
       </Button>

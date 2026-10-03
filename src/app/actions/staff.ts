@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { refreshStorefront } from '@/lib/storefront';
 import { OrderStatus, Permission, ReviewStatus, Role } from '@prisma/client';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
@@ -83,6 +84,8 @@ export async function setOrderStatus(input: {
   revalidatePath('/admin/orders');
   revalidatePath('/employee/orders');
   revalidatePath('/account/orders');
+  // a cancelled order puts stock back, and the product page shows stock
+  if (parsed.data.status === OrderStatus.CANCELLED) refreshStorefront();
   return { ok: true };
 }
 
@@ -118,9 +121,7 @@ export async function updateProduct(input: z.infer<typeof productSchema>): Promi
     },
   });
 
-  revalidatePath('/admin/products');
-  revalidatePath('/employee/products');
-  revalidatePath('/catalog');
+  refreshStorefront();
   return { ok: true };
 }
 
@@ -154,9 +155,7 @@ export async function updatePricing(input: {
     data: { price: parsed.data.price, salePrice: parsed.data.salePrice },
   });
 
-  revalidatePath('/admin/products');
-  revalidatePath('/catalog');
-  revalidatePath('/');
+  refreshStorefront();
   return { ok: true };
 }
 
@@ -173,8 +172,7 @@ export async function updateStock(variantId: string, stock: number): Promise<Act
     data: { stock: parsed.data.stock },
   });
 
-  revalidatePath('/admin/stock');
-  revalidatePath('/employee/stock');
+  refreshStorefront();
   return { ok: true };
 }
 
@@ -185,8 +183,7 @@ export async function moderateReview(reviewId: string, status: ReviewStatus): Pr
   if (!user) return DENIED;
 
   await prisma.review.update({ where: { id: reviewId }, data: { status } });
-  revalidatePath('/admin/reviews');
-  revalidatePath('/employee/reviews');
+  refreshStorefront();
   return { ok: true };
 }
 
@@ -270,9 +267,7 @@ export async function updateCategory(input: z.infer<typeof categorySchema>): Pro
     data: { name: parsed.data.name, isActive: parsed.data.isActive },
   });
 
-  revalidatePath('/admin/categories');
-  revalidatePath('/employee/categories');
-  revalidatePath('/', 'layout');
+  refreshStorefront();
   return { ok: true };
 }
 
@@ -283,10 +278,7 @@ export async function setLookPublic(lookId: string, isPublic: boolean): Promise<
   if (!user) return DENIED;
 
   await prisma.look.update({ where: { id: lookId }, data: { isPublic } });
-  revalidatePath('/admin/looks');
-  revalidatePath('/employee/looks');
-  revalidatePath('/');
-  revalidatePath('/looks');
+  refreshStorefront();
   return { ok: true };
 }
 
@@ -316,8 +308,6 @@ export async function updateDeliveryZone(
   const { zoneId, ...data } = parsed.data;
   await prisma.deliveryZone.update({ where: { id: zoneId }, data });
 
-  revalidatePath('/admin/delivery');
-  revalidatePath('/checkout');
-  revalidatePath('/delivery');
+  refreshStorefront();
   return { ok: true };
 }

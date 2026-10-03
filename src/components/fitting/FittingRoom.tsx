@@ -12,6 +12,7 @@ import type { ViewAngle } from '@/components/fitting/FittingScene';
 import type { Slot } from '@/lib/mannequin/garments';
 import { DEFAULT_BODY, clampBody, type BodyParams } from '@/lib/mannequin/measurements';
 import { addOutfitToCart } from '@/app/actions/fitting';
+import { useShopSession } from '@/components/shop/ShopSession';
 import { saveLook } from '@/app/actions/account';
 import { formatPrice } from '@/lib/money';
 import { Button } from '@/components/ui/button';
@@ -136,6 +137,8 @@ export function FittingRoom({ products, initialWorn = {}, initialSlot = 'TOP' }:
     setWorn((current) => ({ ...current, [product.slot]: { productId: product.id, colorKey } }));
   }, []);
 
+  const { setCartCount } = useShopSession();
+
   function addAll() {
     if (outfit.length === 0) return;
     startTransition(async () => {
@@ -146,6 +149,7 @@ export function FittingRoom({ products, initialWorn = {}, initialSlot = 'TOP' }:
           size,
         })),
       );
+      if (result.ok) setCartCount(result.count);
       setNotice(
         result.ok
           ? result.skipped > 0
@@ -269,7 +273,7 @@ export function FittingRoom({ products, initialWorn = {}, initialSlot = 'TOP' }:
                   Добавить весь образ
                 </Button>
                 <Button asChild variant="outline">
-                  <Link href="/cart">Корзина</Link>
+                  <Link href="/cart" prefetch={false}>Корзина</Link>
                 </Button>
               </div>
 

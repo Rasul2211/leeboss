@@ -28,7 +28,10 @@ export function ProductCarousel({ items }: { items: CarouselItem[] }) {
   const track = useRef<HTMLUListElement>(null);
   const [current, setCurrent] = useState(0);
 
-  const onScroll = useCallback(() => {
+  const frame = useRef(0);
+
+  const measure = useCallback(() => {
+    frame.current = 0;
     const node = track.current;
     if (!node) return;
     const centre = node.scrollLeft + node.clientWidth / 2;
@@ -45,9 +48,16 @@ export function ProductCarousel({ items }: { items: CarouselItem[] }) {
     setCurrent(nearest);
   }, []);
 
+  // a swipe fires scroll events faster than the screen redraws; measuring on
+  // each one makes the swipe itself stutter, so it is done once per frame
+  const onScroll = useCallback(() => {
+    if (!frame.current) frame.current = requestAnimationFrame(measure);
+  }, [measure]);
+
   useEffect(() => {
-    onScroll();
-  }, [onScroll]);
+    measure();
+    return () => cancelAnimationFrame(frame.current);
+  }, [measure]);
 
   function go(step: number) {
     const node = track.current;
@@ -82,7 +92,7 @@ export function ProductCarousel({ items }: { items: CarouselItem[] }) {
       <ul
         ref={track}
         onScroll={onScroll}
-        className="hide-scrollbar mt-8 flex snap-x snap-mandatory gap-6 overflow-x-auto px-[calc(50vw-9rem)] sm:px-[calc(50vw-13rem)]"
+        className="hide-scrollbar overscroll-x-contain mt-8 flex snap-x snap-mandatory gap-6 overflow-x-auto px-[calc(50vw-9rem)] sm:px-[calc(50vw-13rem)]"
       >
         {items.map((entry, index) => (
           <li key={entry.slug} className="w-72 shrink-0 snap-center sm:w-[26rem]">

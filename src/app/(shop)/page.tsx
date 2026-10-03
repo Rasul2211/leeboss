@@ -9,17 +9,15 @@ import { Testimonials } from '@/components/home/Testimonials';
 import { LooksSection } from '@/components/home/LooksSection';
 import { Section, ProductGrid } from '@/components/home/Section';
 import { getBestSellers, getNewArrivals, getOnSale, getOutfits, getPublicLooks, getTestimonials } from '@/lib/catalog';
-import { getFavoriteIds } from '@/lib/favorites';
 
 export default async function HomePage() {
-  const [newArrivals, bestSellers, onSale, looks, testimonials, favoriteIds, shoes, outfits, singles] =
+  const [newArrivals, bestSellers, onSale, looks, testimonials, shoes, outfits, singles] =
     await Promise.all([
       getNewArrivals(6),
       getBestSellers(6),
       getOnSale(6),
       getPublicLooks(),
       getTestimonials(),
-      getFavoriteIds(),
       getShoeCarousel(),
       getOutfits(6),
       getSinglesGrid(),
@@ -36,7 +34,7 @@ export default async function HomePage() {
         description="Всё, что можно взять отдельно от образа."
         href="/catalog"
       >
-        <ProductGrid products={singles} favoriteIds={favoriteIds} />
+        <ProductGrid products={singles} />
       </Section>
 
       <CategoryTiles />
@@ -44,9 +42,9 @@ export default async function HomePage() {
       <Section
         title="Новые поступления"
         description="Последнее, что появилось в залах на Мунисе и в Сиёме."
-        href="/catalog?sort=new"
+        href="/catalog"
       >
-        <ProductGrid products={newArrivals} favoriteIds={favoriteIds} />
+        <ProductGrid products={newArrivals} />
       </Section>
 
       <FittingPromo />
@@ -57,13 +55,13 @@ export default async function HomePage() {
           something true to show: orders for one, a set sale price for the other. */}
       {bestSellers.length > 0 ? (
         <Section title="Часто покупают" href="/catalog">
-          <ProductGrid products={bestSellers} favoriteIds={favoriteIds} />
+          <ProductGrid products={bestSellers} />
         </Section>
       ) : null}
 
       {onSale.length > 0 ? (
         <Section title="Специальные предложения" href="/catalog">
-          <ProductGrid products={onSale} favoriteIds={favoriteIds} />
+          <ProductGrid products={onSale} />
         </Section>
       ) : null}
 

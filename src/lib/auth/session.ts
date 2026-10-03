@@ -12,6 +12,14 @@ import type { Permission, Role } from '@prisma/client';
 */
 
 const COOKIE = 'lb_session';
+
+/**
+ * A plain, script-readable note that this browser has neither a session nor a
+ * basket. The shop pages are the same for everyone and ask /api/session for the
+ * personal part; a visitor carrying this note is known to have none, so the
+ * question is not asked at all. It is removed the moment either cookie is set.
+ */
+export const GUEST_MARK = 'lb_guest';
 const MAX_AGE = 60 * 60 * 24 * 30; // 30 days
 
 export type SessionPayload = {
@@ -33,13 +41,15 @@ export async function createSession(payload: SessionPayload): Promise<void> {
     .setExpirationTime(`${MAX_AGE}s`)
     .sign(secret());
 
-  (await cookies()).set(COOKIE, token, {
+  const jar = await cookies();
+  jar.set(COOKIE, token, {
     httpOnly: true,
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production',
     path: '/',
     maxAge: MAX_AGE,
   });
+  jar.delete(GUEST_MARK);
 }
 
 export async function readSession(): Promise<SessionPayload | null> {

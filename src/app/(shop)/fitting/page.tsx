@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
+import { unstable_cache } from 'next/cache';
 import { prisma } from '@/lib/prisma';
+import { STOREFRONT_TAG, STOREFRONT_TTL } from '@/lib/storefront';
 import { FittingRoom } from '@/components/fitting/FittingRoom';
 import { PhotoFittingRoom, type LayerIndex } from '@/components/fitting/PhotoFittingRoom';
 import type { FittingProduct } from '@/components/fitting/ItemPicker';
@@ -14,7 +16,43 @@ export const metadata: Metadata = {
 type Search = { look?: string; add?: string };
 type Worn = Partial<Record<Slot, { productId: string; colorKey: string }>>;
 
-async function loadProducts(): Promise<FittingProduct[]> {
+/*
+  This page reads its query string (?add=, ?look=), so it is rendered per
+  request - but the wardrobe it shows is the same for everyone, and is kept
+  between requests instead of being read from the database each time.
+*/
+const KEPT = { tags: [STOREFRONT_TAG], revalidate: STOREFRONT_TTL };
+
+const loadProducts = unstable_cache(readProducts, ['fitting-products'], KEPT);
+
+const loadBodies = unstable_cache(
+  async () =>
+    prisma.fittingBody.findMany({
+      where: { isActive: true },
+      orderBy: { sortOrder: 'asc' },
+      select: {
+        id: true,
+        bodyType: true,
+        label: true,
+        imageUrl: true,
+        width: true,
+        height: true,
+      },
+    }),
+  ['fitting-bodies'],
+  KEPT,
+);
+
+const loadLayers = unstable_cache(
+  async () =>
+    prisma.fittingLayer.findMany({
+      select: { productId: true, bodyId: true, imageUrl: true },
+    }),
+  ['fitting-layers'],
+  KEPT,
+);
+
+async function readProducts(): Promise<FittingProduct[]> {
   const rows = await prisma.product.findMany({
     // an outfit is a whole look in one line: it has no place on the mannequin
     where: { isActive: true, isOutfit: false },
@@ -96,18 +134,7 @@ export default async function FittingPage({ searchParams }: { searchParams: Prom
   const [params, products, bodies] = await Promise.all([
     searchParams,
     loadProducts(),
-    prisma.fittingBody.findMany({
-      where: { isActive: true },
-      orderBy: { sortOrder: 'asc' },
-      select: {
-        id: true,
-        bodyType: true,
-        label: true,
-        imageUrl: true,
-        width: true,
-        height: true,
-      },
-    }),
+    loadBodies(),
   ]);
 
   const { worn, slot } = await resolveInitial(params, products);
@@ -122,9 +149,7 @@ export default async function FittingPage({ searchParams }: { searchParams: Prom
     return <FittingRoom products={products} initialWorn={worn} initialSlot={slot} />;
   }
 
-  const layerRows = await prisma.fittingLayer.findMany({
-    select: { productId: true, bodyId: true, imageUrl: true },
-  });
+  const layerRows = await loadLayers();
 
   const layers: LayerIndex = {};
   for (const row of layerRows) {

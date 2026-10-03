@@ -2,23 +2,37 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useTransition } from 'react';
+import { useOptimistic, useTransition } from 'react';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import { removeCartItem, setCartItemQuantity } from '@/app/actions/cart';
 import { effectivePrice, formatPrice } from '@/lib/money';
 import type { CartItem } from '@/lib/cart';
+import { useShopSession } from '@/components/shop/ShopSession';
 
 export function CartRow({ item }: { item: CartItem }) {
   const [pending, startTransition] = useTransition();
+  const { bumpCart, setCartCount, refresh } = useShopSession();
+  // what the row shows while the server is still being told; it falls back to
+  // the real quantity by itself once the page has been re-rendered
+  const [quantity, showQuantity] = useOptimistic(item.quantity);
   const { product, size, color, stock } = item.variant;
   const unit = effectivePrice(product.price, product.salePrice);
   const image = product.images[0];
 
-  function change(quantity: number) {
+  function change(next: number) {
+    // outside the transition: inside it the badge would wait for the server too
+    bumpCart(next - quantity);
     startTransition(async () => {
-      await setCartItemQuantity(item.id, quantity);
+      showQuantity(next);
+      const result =
+        next < 1 ? await removeCartItem(item.id) : await setCartItemQuantity(item.id, next);
+      if (result.ok) setCartCount(result.count);
+      else refresh(); // the badge was moved ahead of the server; ask what is true
     });
   }
+
+  // a removed row disappears on the tap, not when the server gets round to it
+  if (quantity < 1) return null;
 
   return (
     <div className="flex gap-4 py-5" data-pending={pending || undefined}>
@@ -47,7 +61,7 @@ export function CartRow({ item }: { item: CartItem }) {
           </div>
 
           <p className="price-figures shrink-0 text-sm font-semibold text-ink">
-            {formatPrice(unit * item.quantity)}
+            {formatPrice(unit * quantity)}
           </p>
         </div>
 
@@ -55,18 +69,17 @@ export function CartRow({ item }: { item: CartItem }) {
           <div className="inline-flex items-center rounded-lg border border-line">
             <button
               type="button"
-              onClick={() => change(item.quantity - 1)}
-              disabled={pending}
+              onClick={() => change(quantity - 1)}
               aria-label="Уменьшить количество"
               className="grid size-9 place-items-center text-ink-muted hover:text-ink disabled:opacity-40"
             >
               <Minus className="size-4" aria-hidden />
             </button>
-            <span className="price-figures w-8 text-center text-sm">{item.quantity}</span>
+            <span className="price-figures w-8 text-center text-sm">{quantity}</span>
             <button
               type="button"
-              onClick={() => change(item.quantity + 1)}
-              disabled={pending || item.quantity >= stock}
+              onClick={() => change(quantity + 1)}
+              disabled={quantity >= stock}
               aria-label="Увеличить количество"
               className="grid size-9 place-items-center text-ink-muted hover:text-ink disabled:opacity-40"
             >
@@ -76,8 +89,7 @@ export function CartRow({ item }: { item: CartItem }) {
 
           <button
             type="button"
-            onClick={() => startTransition(async () => void (await removeCartItem(item.id)))}
-            disabled={pending}
+            onClick={() => change(0)}
             className="inline-flex items-center gap-1.5 text-xs text-ink-faint hover:text-brand disabled:opacity-40"
           >
             <Trash2 className="size-4" aria-hidden />
@@ -85,7 +97,7 @@ export function CartRow({ item }: { item: CartItem }) {
           </button>
         </div>
 
-        {item.quantity >= stock ? (
+        {quantity >= stock ? (
           <p className="pt-2 text-xs text-ink-faint">Это всё, что есть в наличии</p>
         ) : null}
       </div>

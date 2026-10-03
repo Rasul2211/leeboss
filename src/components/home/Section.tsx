@@ -34,13 +34,23 @@ export function Section({ title, description, href, linkLabel = 'Смотрет�
   );
 }
 
-/** The catalogue grid: three across on desktop, two on phones, as agreed. */
+/**
+ * The catalogue grid: three across on desktop, two on phones, as agreed.
+ *
+ * `eager` is for a grid that opens the page: its first row is then loaded ahead
+ * of everything else. Left on by default it made the home page preload a row
+ * from each of its grids, all far below the fold, ahead of the one photograph
+ * actually on screen.
+ */
 export function ProductGrid({
   products,
   favoriteIds,
+  eager = false,
 }: {
   products: ProductCardData[];
+  /** Only where the page already knows them; elsewhere the hearts fill in from the browser. */
   favoriteIds?: Set<string>;
+  eager?: boolean;
 }) {
   return (
     <ul className="grid grid-cols-2 gap-x-4 gap-y-9 lg:grid-cols-3 lg:gap-x-6">
@@ -49,7 +59,7 @@ export function ProductGrid({
           <ProductCard
             product={product}
             isFavorite={favoriteIds?.has(product.id)}
-            priority={index < 3}
+            priority={eager && index < 2}
           />
         </li>
       ))}

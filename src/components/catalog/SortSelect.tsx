@@ -1,17 +1,27 @@
 'use client';
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useTransition } from 'react';
+import { useRouter } from 'next/navigation';
+import { catalogHref, isSortKey } from '@/lib/catalog-url';
+import { cn } from '@/lib/utils';
 
-export function SortSelect({ value, labels }: { value: string; labels: Record<string, string> }) {
+export function SortSelect({
+  value,
+  category,
+  labels,
+}: {
+  value: string;
+  category?: string;
+  labels: Record<string, string>;
+}) {
   const router = useRouter();
-  const pathname = usePathname();
-  const params = useSearchParams();
+  const [pending, startTransition] = useTransition();
 
   function onChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    const next = new URLSearchParams(params);
-    next.set('sort', event.target.value);
-    next.delete('page'); // a new sort order starts from the first page
-    router.push(`${pathname}?${next}`);
+    const sort = event.target.value;
+    if (!isSortKey(sort)) return;
+    // a new sort order starts from the first page
+    startTransition(() => router.push(catalogHref({ category, sort })));
   }
 
   return (
@@ -20,7 +30,10 @@ export function SortSelect({ value, labels }: { value: string; labels: Record<st
       <select
         value={value}
         onChange={onChange}
-        className="h-9 rounded-lg border border-line bg-white px-3 text-sm text-ink focus:border-brand focus:outline-none"
+        className={cn(
+          'h-9 rounded-lg border border-line bg-white px-3 text-sm text-ink focus:border-brand focus:outline-none',
+          pending && 'opacity-60',
+        )}
       >
         {Object.entries(labels).map(([key, label]) => (
           <option key={key} value={key}>

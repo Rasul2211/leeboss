@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { Check, Loader2 } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { addToCart } from '@/app/actions/cart';
+import { useShopSession } from '@/components/shop/ShopSession';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -24,8 +25,10 @@ export function AddOutfitToCartForm({ variantId, inStock, hasShoes }: Props) {
   const [message, setMessage] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const [pending, startTransition] = useTransition();
+  const { bumpCart, setCartCount } = useShopSession();
 
   function onSubmit() {
+    if (pending) return;
     if (!top || !bottom || (hasShoes && !shoes)) {
       setMessage('Выберите все размеры');
       return;
@@ -35,13 +38,19 @@ export function AddOutfitToCartForm({ variantId, inStock, hasShoes }: Props) {
       .filter(Boolean)
       .join(' · ');
 
+    // answered at once, confirmed by the server a moment later; see AddToCartForm
+    setMessage(null);
+    setDone(true);
+    bumpCart(1);
+
     startTransition(async () => {
       const result = await addToCart({ variantId, sizeNote: note });
       if (result.ok) {
-        setDone(true);
-        setMessage(null);
+        setCartCount(result.count);
         setTimeout(() => setDone(false), 2500);
       } else {
+        bumpCart(-1);
+        setDone(false);
         setMessage(result.message);
       }
     });
@@ -55,8 +64,7 @@ export function AddOutfitToCartForm({ variantId, inStock, hasShoes }: Props) {
         <SizeRow label="Размер обуви" sizes={SHOE_SIZES} value={shoes} onChange={(v) => { setShoes(v); setMessage(null); }} />
       ) : null}
 
-      <Button size="lg" className="w-full" onClick={onSubmit} disabled={pending || !inStock}>
-        {pending ? <Loader2 className="size-4 animate-spin" aria-hidden /> : null}
+      <Button size="lg" className="w-full" onClick={onSubmit} disabled={!inStock} aria-busy={pending}>
         {done ? <Check className="size-4" aria-hidden /> : null}
         {done ? 'Образ в корзине' : 'Взять образ целиком'}
       </Button>
