@@ -3,6 +3,7 @@ import { FittingPromo } from '@/components/home/FittingPromo';
 import { ProductCarousel } from '@/components/home/ProductCarousel';
 import { OutfitSection } from '@/components/home/OutfitSection';
 import { HomeCatalog } from '@/components/home/HomeCatalog';
+import { InspirationSection } from '@/components/home/InspirationSection';
 import { Advantages } from '@/components/home/Advantages';
 import { Testimonials } from '@/components/home/Testimonials';
 import { LooksSection } from '@/components/home/LooksSection';
@@ -43,6 +44,7 @@ export default async function HomePage() {
       <Hero showcase={showcase} garments={garments.length} outfits={outfits.length} />
       <OutfitSection outfits={outfits} />
       <ProductCarousel items={shoes} />
+      <InspirationSection />
 
       <Section title="Весь каталог" description="Все вещи, что есть в залах на Мунисе и в Сиёме.">
         <HomeCatalog
