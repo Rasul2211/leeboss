@@ -23,7 +23,7 @@ export function StaffNavLink({
       href={href}
       aria-current={active ? 'page' : undefined}
       className={cn(
-        'inline-flex shrink-0 items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors',
+        'flex min-h-11 items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors lg:min-h-0',
         active ? 'bg-brand text-white' : 'text-ink-muted hover:bg-surface-alt hover:text-ink',
       )}
     >

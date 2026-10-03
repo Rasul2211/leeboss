@@ -3,12 +3,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Ruler } from 'lucide-react';
-import { getProductBySlug } from '@/lib/catalog';
+import { getProductBySlug, getRelatedProducts } from '@/lib/catalog';
 import { effectivePrice, formatPrice } from '@/lib/money';
 import { AddToCartForm } from '@/components/product/AddToCartForm';
 import { AddOutfitToCartForm } from '@/components/product/AddOutfitToCartForm';
 import { FavoriteButton } from '@/components/product/FavoriteButton';
 import { Button } from '@/components/ui/button';
+import { ProductGrid } from '@/components/home/Section';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -46,6 +47,7 @@ export default async function ProductPage({ params }: Props) {
 
   const price = effectivePrice(product.price, product.salePrice);
   const inStock = product.variants.some((v) => v.stock > 0);
+  const { similar, wornWith } = await getRelatedProducts(product);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
@@ -189,6 +191,22 @@ export default async function ProductPage({ params }: Props) {
         </div>
       </div>
 
+      {similar.length > 0 ? (
+        <Related
+          title={product.isOutfit ? 'Другие образы' : `Похожее: ${product.category.name.toLowerCase()}`}
+          href={`/catalog/${product.category.slug}`}
+          linkLabel={product.isOutfit ? 'Все образы' : 'Весь раздел'}
+        >
+          <ProductGrid products={similar} />
+        </Related>
+      ) : null}
+
+      {wornWith.length > 0 ? (
+        <Related title="С этим носят" href="/catalog" linkLabel="Весь каталог">
+          <ProductGrid products={wornWith} />
+        </Related>
+      ) : null}
+
       <section className="mt-16 border-t border-line pt-10">
         <h2 className="text-xl font-semibold text-ink">Отзывы</h2>
         {product.reviews.length === 0 ? (
@@ -209,6 +227,31 @@ export default async function ProductPage({ params }: Props) {
         )}
       </section>
     </div>
+  );
+}
+
+/** A block of other products under the one being looked at. */
+function Related({
+  title,
+  href,
+  linkLabel,
+  children,
+}: {
+  title: string;
+  href: string;
+  linkLabel: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="mt-14 border-t border-line pt-10">
+      <div className="mb-6 flex items-baseline justify-between gap-4">
+        <h2 className="text-xl font-semibold text-ink">{title}</h2>
+        <Link href={href} className="shrink-0 text-sm font-medium text-brand hover:text-brand-hover">
+          {linkLabel}
+        </Link>
+      </div>
+      {children}
+    </section>
   );
 }
 

@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getCategoryBySlug, listProducts, SORT_LABELS } from '@/lib/catalog';
+import { getCategoryBySlug, getCategoryTree, listProducts, SORT_LABELS } from '@/lib/catalog';
 import { parseCatalogPath } from '@/lib/catalog-url';
 import { ProductGrid } from '@/components/home/Section';
 import { SortSelect } from '@/components/catalog/SortSelect';
 import { Pagination } from '@/components/catalog/Pagination';
+import { cn, plural } from '@/lib/utils';
 
 type Params = { slug?: string[] };
 
@@ -36,8 +37,46 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     title: category ? category.name : 'Каталог',
     description: category
       ? `${category.name} в магазине LEEBOSS, Душанбе. Примерьте на виртуальном манекене перед покупкой.`
-      : 'Каталог мужской одежды, обуви и аксессуаров LEEBOSS в Душанбе.',
+      : 'Каталог мужской одежды и обуви LEEBOSS в Душанбе.',
   };
+}
+
+type Category = NonNullable<Awaited<ReturnType<typeof getCategoryBySlug>>>;
+type Chip = { href: string; label: string; active: boolean };
+
+/**
+ * The row of sections under the heading. It always offers a way sideways and a
+ * way up: a section lists its own parts, a part lists its neighbours, and the
+ * whole catalogue lists the sections that actually hold something.
+ */
+async function sectionChips(category: Category | null): Promise<Chip[]> {
+  if (!category) {
+    const tree = await getCategoryTree();
+    const stocked = tree.filter(
+      (section) =>
+        section._count.products + section.children.reduce((sum, c) => sum + c._count.products, 0) > 0,
+    );
+    return [
+      { href: '/catalog', label: 'Всё', active: true },
+      ...stocked.map((section) => ({
+        href: `/catalog/${section.slug}`,
+        label: section.name,
+        active: false,
+      })),
+    ];
+  }
+
+  const group = category.children.length > 0 ? category : category.parent;
+  if (!group) return [];
+
+  return [
+    { href: `/catalog/${group.slug}`, label: 'Всё', active: group.slug === category.slug },
+    ...group.children.map((child) => ({
+      href: `/catalog/${child.slug}`,
+      label: child.name,
+      active: child.slug === category.slug,
+    })),
+  ];
 }
 
 export default async function CatalogPage({ params }: { params: Promise<Params> }) {
@@ -53,6 +92,8 @@ export default async function CatalogPage({ params }: { params: Promise<Params> 
   // a page past the end is not a page: without this every number would be
   // built and kept, however large
   if (view.page > result.pages) notFound();
+
+  const chips = await sectionChips(category);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
@@ -80,32 +121,43 @@ export default async function CatalogPage({ params }: { params: Promise<Params> 
         ) : null}
       </nav>
 
-      <div className="mt-4 flex flex-wrap items-baseline justify-between gap-4">
-        <h1 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-          {category?.name ?? 'Весь каталог'}
-          <span className="price-figures ml-3 text-sm font-normal text-ink-faint">
-            {result.total}
-          </span>
-        </h1>
-        <SortSelect value={view.sort} category={category?.slug} labels={SORT_LABELS} />
-      </div>
+      <h1 className="mt-4 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+        {category?.name ?? 'Весь каталог'}
+      </h1>
 
-      {category?.children.length ? (
-        <ul className="hide-scrollbar mt-5 flex gap-2 overflow-x-auto pb-1">
-          {category.children.map((child) => (
-            <li key={child.slug}>
+      {chips.length > 1 ? (
+        // bleeds to the screen edge on a phone, so the row visibly continues
+        <ul className="hide-scrollbar -mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-1">
+          {chips.map((chip) => (
+            <li key={chip.href}>
               <Link
-                href={`/catalog/${child.slug}`}
-                className="inline-flex h-9 items-center whitespace-nowrap rounded-full border border-line px-4 text-sm text-ink-muted transition-colors hover:border-brand hover:text-brand"
+                href={chip.href}
+                aria-current={chip.active ? 'page' : undefined}
+                className={cn(
+                  'inline-flex h-9 items-center whitespace-nowrap rounded-full border px-4 text-sm transition-colors',
+                  chip.active
+                    ? 'border-ink bg-ink text-white'
+                    : 'border-line text-ink-muted hover:border-ink/40 hover:text-ink',
+                )}
               >
-                {child.name}
+                {chip.label}
               </Link>
             </li>
           ))}
         </ul>
       ) : null}
 
-      <div className="mt-8">
+      <div className="mt-5 flex items-center justify-between gap-4 border-y border-line py-2.5">
+        <p className="price-figures text-sm text-ink-muted">
+          {result.total}{' '}
+          {result.items.every((item) => item.isOutfit)
+            ? plural(result.total, ['образ', 'образа', 'образов'])
+            : plural(result.total, ['товар', 'товара', 'товаров'])}
+        </p>
+        <SortSelect value={view.sort} category={category?.slug} labels={SORT_LABELS} />
+      </div>
+
+      <div className="mt-6">
         {result.items.length > 0 ? (
           <>
             <ProductGrid products={result.items} eager />

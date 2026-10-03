@@ -16,6 +16,8 @@ export const productCardSelect = {
   brand: true,
   price: true,
   salePrice: true,
+  // an outfit is photographed square; its card must not crop it to 3:4
+  isOutfit: true,
   images: { select: { url: true, alt: true }, orderBy: { sortOrder: 'asc' }, take: 1 },
   colors: { select: { key: true, name: true, hex: true }, orderBy: { sortOrder: 'asc' } },
 } satisfies Prisma.ProductSelect;
@@ -162,7 +164,18 @@ export const getCategoryBySlug = cache(async (slug: string) => {
       id: true,
       slug: true,
       name: true,
-      parent: { select: { slug: true, name: true } },
+      parent: {
+        select: {
+          slug: true,
+          name: true,
+          // the sections next door, so a leaf page is not a dead end
+          children: {
+            where: { isActive: true },
+            orderBy: { sortOrder: 'asc' },
+            select: { slug: true, name: true },
+          },
+        },
+      },
       children: {
         where: { isActive: true },
         orderBy: { sortOrder: 'asc' },
@@ -171,6 +184,101 @@ export const getCategoryBySlug = cache(async (slug: string) => {
     },
   });
 });
+
+/** What goes with what: under trousers, show tops and shoes, and so on. */
+const WORN_WITH: Record<string, string[]> = {
+  TOP: ['BOTTOM', 'SHOES'],
+  OUTERWEAR: ['BOTTOM', 'SHOES'],
+  BOTTOM: ['TOP', 'SHOES'],
+  SHOES: ['BOTTOM', 'TOP'],
+  HEADWEAR: ['TOP', 'BOTTOM'],
+  ACCESSORY: ['TOP', 'BOTTOM'],
+};
+
+/** A steady number from a slug, so each product gets its own pick but always the same one. */
+function seedOf(text: string): number {
+  let seed = 0;
+  for (const char of text) seed = (seed * 31 + char.charCodeAt(0)) >>> 0;
+  return seed;
+}
+
+/** Takes `count` items starting from a point that depends on the seed. */
+function pickFrom<T>(items: T[], count: number, seed: number): T[] {
+  if (items.length <= count) return items;
+  const start = seed % items.length;
+  return Array.from({ length: count }, (_, index) => items[(start + index) % items.length]!);
+}
+
+type RelatedTo = {
+  id: string;
+  slug: string;
+  categoryId: string;
+  isOutfit: boolean;
+  mannequinSlot: string;
+  category: { parent: { slug: string } | null };
+};
+
+/**
+ * What to show under a product: more of the same kind, and what it is worn with.
+ *
+ * "More of the same" is the product's own section first (other trousers under
+ * trousers), topped up from the sections beside it when that one is small.
+ * An outfit is a whole look already, so under it there are only other outfits.
+ */
+export async function getRelatedProducts(product: RelatedTo) {
+  const seed = seedOf(product.slug);
+  const base = { isActive: true, id: { not: product.id } } satisfies Prisma.ProductWhereInput;
+
+  if (product.isOutfit) {
+    const outfits = await prisma.product.findMany({
+      where: { ...base, isOutfit: true },
+      select: productCardSelect,
+      orderBy: { createdAt: 'desc' },
+      take: 24,
+    });
+    return { similar: pickFrom(outfits, 6, seed), wornWith: [] as ProductCardData[] };
+  }
+
+  const slots = WORN_WITH[product.mannequinSlot] ?? [];
+  const [same, nearby, ...others] = await Promise.all([
+    prisma.product.findMany({
+      where: { ...base, isOutfit: false, categoryId: product.categoryId },
+      select: productCardSelect,
+      orderBy: { createdAt: 'desc' },
+      take: 24,
+    }),
+    product.category.parent
+      ? prisma.product.findMany({
+          where: {
+            ...base,
+            isOutfit: false,
+            categoryId: { not: product.categoryId },
+            category: { parent: { slug: product.category.parent.slug } },
+          },
+          select: productCardSelect,
+          orderBy: { createdAt: 'desc' },
+          take: 12,
+        })
+      : Promise.resolve([] as ProductCardData[]),
+    ...slots.map((slot) =>
+      prisma.product.findMany({
+        where: { ...base, isOutfit: false, mannequinSlot: slot as Prisma.EnumMannequinSlotFilter['equals'] },
+        select: productCardSelect,
+        orderBy: { createdAt: 'desc' },
+        take: 24,
+      }),
+    ),
+  ]);
+
+  const similar = pickFrom(same, 6, seed);
+  if (similar.length < 6) similar.push(...pickFrom(nearby, 6 - similar.length, seed));
+
+  // two from each kind it is worn with, interleaved so the row is not all shoes
+  const picks = others.map((list, index) => pickFrom(list, 2, seed + index));
+  const wornWith = [0, 1].flatMap((row) => picks.flatMap((list) => (list[row] ? [list[row]] : [])));
+
+  return { similar, wornWith };
+}
 
 /** The shop's two halls, for the footer and the contact pages. */
 export const getPickupPoints = unstable_cache(

@@ -52,14 +52,18 @@ export function ProductGrid({
   favoriteIds?: Set<string>;
   eager?: boolean;
 }) {
+  // a grid of nothing but outfits takes their square frame; see ProductCard
+  const square = products.length > 0 && products.every((product) => product.isOutfit);
+
   return (
-    <ul className="grid grid-cols-2 gap-x-4 gap-y-9 lg:grid-cols-3 lg:gap-x-6">
+    <ul className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-4 lg:grid-cols-3 lg:gap-x-6 lg:gap-y-10">
       {products.map((product, index) => (
         <li key={product.id}>
           <ProductCard
             product={product}
             isFavorite={favoriteIds?.has(product.id)}
             priority={eager && index < 2}
+            square={square}
           />
         </li>
       ))}
