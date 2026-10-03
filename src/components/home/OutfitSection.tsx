@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 import type { OutfitCardData } from '@/lib/catalog';
 import { formatPrice } from '@/lib/money';
 
@@ -11,32 +10,22 @@ import { formatPrice } from '@/lib/money';
  * bottom edge, and filling a tall card would cut them off. The price list sits
  * under the photograph, so it is clear what the total is made of before the
  * card is even opened.
+ *
+ * All of them are here, with no "see all" to follow. On a phone they go two
+ * across and the price list is left to the outfit's own page - nineteen
+ * full-width cards would be ten screens of scrolling before anything else.
  */
 export function OutfitSection({ outfits }: { outfits: OutfitCardData[] }) {
   if (outfits.length === 0) return null;
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-14 sm:py-16">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-            Готовые образы
-          </h2>
-          <p className="mt-2 max-w-xl text-sm text-ink-muted">
-            Собраны и сняты в магазине. Берётся целиком, одной кнопкой.
-          </p>
-        </div>
+      <h2 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">Готовые образы</h2>
+      <p className="mt-2 max-w-xl text-sm text-ink-muted">
+        Собраны и сняты в магазине. Берётся целиком, одной кнопкой.
+      </p>
 
-        <Link
-          href="/catalog/obrazy"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-brand hover:text-brand-hover"
-        >
-          Все образы
-          <ArrowRight className="size-4" aria-hidden />
-        </Link>
-      </div>
-
-      <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="mt-8 grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3">
         {outfits.map((outfit) => {
           const image = outfit.images[0];
           return (
@@ -48,18 +37,18 @@ export function OutfitSection({ outfits }: { outfits: OutfitCardData[] }) {
                       src={image.url}
                       alt={image.alt ?? outfit.name}
                       fill
-                      sizes="(min-width: 1024px) 416px, (min-width: 640px) 45vw, 92vw"
+                      sizes="(min-width: 1024px) 416px, 46vw"
                       className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                     />
                   ) : null}
                 </div>
 
-                <div className="p-4">
-                  <h3 className="text-sm font-semibold text-ink group-hover:text-brand">
+                <div className="p-3 sm:p-4">
+                  <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-ink group-hover:text-brand">
                     {outfit.name}
                   </h3>
 
-                  <ul className="mt-2 space-y-0.5">
+                  <ul className="mt-2 hidden space-y-0.5 sm:block">
                     {outfit.pieces.map((piece) => (
                       <li
                         key={piece.id}
@@ -71,7 +60,7 @@ export function OutfitSection({ outfits }: { outfits: OutfitCardData[] }) {
                     ))}
                   </ul>
 
-                  <p className="price-figures mt-3 border-t border-line pt-3 text-base font-semibold text-brand">
+                  <p className="price-figures mt-2 text-base font-semibold text-brand sm:mt-3 sm:border-t sm:border-line sm:pt-3">
                     {formatPrice(outfit.price)}
                   </p>
                 </div>

@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 import type { ProductCardData } from '@/lib/catalog';
 import { effectivePrice, formatPrice } from '@/lib/money';
 
@@ -15,24 +14,13 @@ export function LooksSection({ looks }: { looks: Look[] }) {
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-14 sm:py-16">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-            Готовые образы
-          </h2>
-          <p className="mt-2 max-w-xl text-sm text-ink-muted">
-            Собраны из вещей, которые есть в магазине. Откройте образ в примерочной или добавьте
-            целиком в корзину.
-          </p>
-        </div>
-        <Link
-          href="/looks"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-brand hover:text-brand-hover"
-        >
-          Все образы
-          <ArrowRight className="size-4" aria-hidden />
-        </Link>
-      </div>
+      <h2 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+        Соберите образ сами
+      </h2>
+      <p className="mt-2 max-w-xl text-sm text-ink-muted">
+        Сочетания из вещей, которые есть в магазине. Откройте любое в примерочной и поменяйте в нём
+        что угодно.
+      </p>
 
       <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {looks.map((look) => {

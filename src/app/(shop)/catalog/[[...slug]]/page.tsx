@@ -87,6 +87,9 @@ export default async function CatalogPage({ params }: { params: Promise<Params> 
     categorySlug: category?.slug,
     sort: view.sort,
     page: view.page,
+    // the whole section on one page: the photographs load as they are scrolled
+    // to, so there is no reason to make a buyer turn pages
+    perPage: 120,
   });
 
   // a page past the end is not a page: without this every number would be

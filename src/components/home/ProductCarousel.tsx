@@ -77,16 +77,11 @@ export function ProductCarousel({ items }: { items: CarouselItem[] }) {
 
   return (
     <section className="overflow-hidden bg-surface-alt py-14 sm:py-16">
-      <div className="mx-auto flex max-w-7xl items-baseline justify-between gap-4 px-4">
+      <div className="mx-auto max-w-7xl px-4">
         <h2 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
           Кроссовки и кеды
         </h2>
-        <Link
-          href="/catalog/obuv"
-          className="text-sm font-medium text-brand hover:text-brand-hover"
-        >
-          Вся обувь
-        </Link>
+        <p className="mt-2 text-sm text-ink-muted">Все пары, что есть в залах. Листайте вбок.</p>
       </div>
 
       <ul
