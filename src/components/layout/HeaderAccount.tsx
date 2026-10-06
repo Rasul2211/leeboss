@@ -11,8 +11,10 @@ export function HeaderAccount() {
 
   return (
     <>
+      {/* the shop's own people go straight to their panel; everyone else to
+          their account, or to sign in */}
       <Link
-        href={user ? '/account' : '/login'}
+        href={user ? (user.staff ? '/admin' : '/account') : '/login'}
         prefetch={false}
         className="flex flex-col items-center px-2 text-[11px] text-ink-muted hover:text-ink"
       >
@@ -56,17 +58,5 @@ function Tapped({ children }: { children: React.ReactNode }) {
     <span className={cn('relative transition-opacity', pending && 'animate-pulse opacity-40')}>
       {children}
     </span>
-  );
-}
-
-/** Shown in the utility strip to the shop's own people only. */
-export function StaffLink() {
-  const { user } = useShopSession();
-  if (!user?.staff) return null;
-
-  return (
-    <Link href="/admin" prefetch={false} className="ml-auto hover:text-ink">
-      Панель управления
-    </Link>
   );
 }

@@ -1,80 +1,35 @@
-import { Hero } from '@/components/home/Hero';
-import { FittingPromo } from '@/components/home/FittingPromo';
-import { ProductCarousel } from '@/components/home/ProductCarousel';
-import { OutfitSection } from '@/components/home/OutfitSection';
-import { HomeCatalog } from '@/components/home/HomeCatalog';
-import { InspirationSection } from '@/components/home/InspirationSection';
-import { Advantages } from '@/components/home/Advantages';
-import { Testimonials } from '@/components/home/Testimonials';
-import { LooksSection } from '@/components/home/LooksSection';
-import { Section, ProductGrid } from '@/components/home/Section';
-import { ProductCard } from '@/components/product/ProductCard';
-import { getAllGarments, getHeroShowcase, getShoeCarousel } from '@/lib/carousel';
-import { getBestSellers, getOnSale, getOutfits, getPublicLooks, getTestimonials } from '@/lib/catalog';
+import { ChevronDown } from 'lucide-react';
+import { ProductGrid } from '@/components/home/Section';
+import { getAllGarments } from '@/lib/home';
 
 /*
-  Nothing on this page ends in "see all". Every outfit, every pair and every
-  garment is here already; the photographs load as the page is scrolled, so
-  showing everything costs the visitor nothing up front.
+  A greeting, then the catalogue. Nothing else: everything the shop has is in
+  the grid, and the photographs load as it is scrolled.
 */
 export default async function HomePage() {
-  const [showcase, outfits, shoes, garments, bestSellers, onSale, looks, testimonials] =
-    await Promise.all([
-      getHeroShowcase(),
-      getOutfits(),
-      getShoeCarousel(),
-      getAllGarments(),
-      getBestSellers(6),
-      getOnSale(6),
-      getPublicLooks(),
-      getTestimonials(),
-    ]);
-
-  // the sections that actually hold something, in the shop's own order
-  const sections = [...new Map(garments.map((entry) => [entry.section.slug, entry.section])).values()]
-    .sort((a, b) => a.sortOrder - b.sortOrder)
-    .map((section) => ({
-      slug: section.slug,
-      name: section.name,
-      count: garments.filter((entry) => entry.section.slug === section.slug).length,
-    }));
+  const garments = await getAllGarments();
 
   return (
     <>
-      <Hero showcase={showcase} garments={garments.length} outfits={outfits.length} />
-      <OutfitSection outfits={outfits} />
-      <ProductCarousel items={shoes} />
-      <InspirationSection />
+      <section className="mx-auto flex max-w-7xl flex-col items-center px-4 pb-14 pt-16 text-center sm:pb-20 sm:pt-24">
+        <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-ink-faint">
+          Мужская одежда · Душанбе
+        </p>
+        <h1 className="mt-5 text-4xl font-semibold tracking-tight text-ink sm:text-6xl">
+          Добро пожаловать
+        </h1>
+        <a
+          href="#catalog"
+          aria-label="К каталогу"
+          className="mt-10 grid size-10 place-items-center rounded-full text-ink-faint transition-colors hover:text-ink"
+        >
+          <ChevronDown className="size-5 animate-bounce" aria-hidden />
+        </a>
+      </section>
 
-      <Section title="Весь каталог" description="Все вещи, что есть в залах на Мунисе и в Сиёме.">
-        <HomeCatalog
-          sections={sections}
-          entries={garments.map(({ product, section }) => ({
-            id: product.id,
-            section: section.slug,
-            card: <ProductCard product={product} sizes="(min-width: 1024px) 25vw, 50vw" />,
-          }))}
-        />
-      </Section>
-
-      {/* Both blocks below are real queries. They stay hidden until there is
-          something true to show: orders for one, a set sale price for the other. */}
-      {bestSellers.length > 0 ? (
-        <Section title="Часто покупают">
-          <ProductGrid products={bestSellers} />
-        </Section>
-      ) : null}
-
-      {onSale.length > 0 ? (
-        <Section title="Специальные предложения">
-          <ProductGrid products={onSale} />
-        </Section>
-      ) : null}
-
-      <FittingPromo />
-      <LooksSection looks={looks} />
-      <Advantages />
-      <Testimonials items={testimonials} />
+      <section id="catalog" className="mx-auto max-w-7xl scroll-mt-20 px-4">
+        <ProductGrid products={garments} eager />
+      </section>
     </>
   );
 }

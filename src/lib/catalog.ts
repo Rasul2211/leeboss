@@ -280,62 +280,6 @@ export async function getRelatedProducts(product: RelatedTo) {
   return { similar, wornWith };
 }
 
-/** The shop's two halls, for the footer and the contact pages. */
-export const getPickupPoints = unstable_cache(
-  async () =>
-    prisma.pickupPoint.findMany({
-      where: { isActive: true },
-      orderBy: { name: 'asc' },
-      select: { id: true, name: true, address: true, hoursFrom: true, hoursTo: true },
-    }),
-  ['pickup-points'],
-  { tags: [STOREFRONT_TAG], revalidate: STOREFRONT_TTL },
-);
-
-export async function getNewArrivals(take = 6) {
-  return prisma.product.findMany({
-    // outfits are new too, but they would fill the row and push every garment
-    // out of it; they have a section of their own
-    where: { isActive: true, isOutfit: false },
-    select: productCardSelect,
-    orderBy: { createdAt: 'desc' },
-    take,
-  });
-}
-
-/**
- * Best sellers are counted from real order lines. With no orders yet this
- * returns an empty list and the home page simply omits the block - nothing
- * is invented to fill the space.
- */
-export async function getBestSellers(take = 6): Promise<ProductCardData[]> {
-  const rows = await prisma.orderItem.groupBy({
-    by: ['productId'],
-    _sum: { quantity: true },
-    orderBy: { _sum: { quantity: 'desc' } },
-    take,
-  });
-  if (rows.length === 0) return [];
-
-  const products = await prisma.product.findMany({
-    where: { id: { in: rows.map((r) => r.productId) }, isActive: true },
-    select: productCardSelect,
-  });
-
-  const rank = new Map(rows.map((r, i) => [r.productId, i]));
-  return products.sort((a, b) => (rank.get(a.id) ?? 0) - (rank.get(b.id) ?? 0));
-}
-
-/** Discounted items. Empty until someone sets a sale price in the admin panel. */
-export async function getOnSale(take = 6) {
-  return prisma.product.findMany({
-    where: { isActive: true, salePrice: { not: null } },
-    select: productCardSelect,
-    orderBy: { updatedAt: 'desc' },
-    take,
-  });
-}
-
 export async function getPublicLooks() {
   return prisma.look.findMany({
     where: { isPublic: true },
@@ -352,30 +296,3 @@ export async function getPublicLooks() {
     },
   });
 }
-
-export async function getTestimonials() {
-  return prisma.testimonial.findMany({
-    where: { isPublished: true },
-    orderBy: { sortOrder: 'asc' },
-    select: { id: true, authorName: true, text: true },
-  });
-}
-
-/** The finished outfits, newest first: one photograph each, priced as a whole. */
-export async function getOutfits(take?: number) {
-  return prisma.product.findMany({
-    where: { isActive: true, isOutfit: true },
-    orderBy: { createdAt: 'desc' },
-    take,
-    select: {
-      id: true,
-      slug: true,
-      name: true,
-      price: true,
-      images: { select: { url: true, alt: true }, orderBy: { sortOrder: 'asc' }, take: 1 },
-      pieces: { orderBy: { sortOrder: 'asc' }, select: { id: true, title: true, price: true } },
-    },
-  });
-}
-
-export type OutfitCardData = Awaited<ReturnType<typeof getOutfits>>[number];

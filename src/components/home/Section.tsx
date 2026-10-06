@@ -35,7 +35,7 @@ export function Section({ title, description, href, linkLabel = 'Смотрет�
 }
 
 /**
- * The catalogue grid: three across on desktop, two on phones, as agreed.
+ * The catalogue grid: four across on desktop, two on phones.
  *
  * `eager` is for a grid that opens the page: its first row is then loaded ahead
  * of everything else. Left on by default it made the home page preload a row
@@ -56,7 +56,7 @@ export function ProductGrid({
   const square = products.length > 0 && products.every((product) => product.isOutfit);
 
   return (
-    <ul className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-4 lg:grid-cols-3 lg:gap-x-6 lg:gap-y-10">
+    <ul className="grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-4 lg:grid-cols-4 lg:gap-x-6 lg:gap-y-10">
       {products.map((product, index) => (
         <li key={product.id}>
           <ProductCard

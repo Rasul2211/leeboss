@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChevronRight, Menu, X } from 'lucide-react';
+import { SearchBar } from '@/components/layout/SearchBar';
 import { cn } from '@/lib/utils';
 
 type Child = { id: string; slug: string; name: string; _count: { products: number } };
@@ -74,8 +75,8 @@ export function CategoryMenu({ tree }: { tree: Section[] }) {
         aria-haspopup="true"
         aria-label={open ? 'Закрыть меню' : 'Открыть меню'}
         className={cn(
-          'inline-flex h-10 items-center gap-2 rounded-lg px-3 text-sm font-medium transition-colors',
-          open ? 'bg-brand text-white' : 'bg-surface-alt text-ink hover:bg-line/60',
+          'inline-flex h-10 items-center gap-2 rounded-lg px-2 text-sm font-medium text-ink transition-colors hover:bg-surface-alt',
+          open && 'bg-surface-alt',
         )}
       >
         {open ? <X className="size-4" aria-hidden /> : <Menu className="size-4" aria-hidden />}
@@ -96,6 +97,11 @@ export function CategoryMenu({ tree }: { tree: Section[] }) {
             'sm:rounded-card sm:border sm:border-line sm:p-5 sm:shadow-xl',
           )}
         >
+          {/* search lives here rather than in the header, which keeps only three things */}
+          <div className="pb-2 pt-2 sm:pb-5 sm:pt-0">
+            <SearchBar />
+          </div>
+
           <div className="divide-y divide-line sm:grid sm:grid-cols-2 sm:gap-x-8 sm:gap-y-6 sm:divide-y-0 lg:grid-cols-3">
             {tree.map((section) => (
               <div key={section.id} className="py-4 sm:py-0">
