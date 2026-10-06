@@ -1,7 +1,8 @@
-import { Clock, MapPin, Send } from 'lucide-react';
+import { Camera, Clock, MapPin, Send } from 'lucide-react';
 import { getHalls } from '@/lib/home';
 
 const TELEGRAM = 'https://t.me/leebosstj';
+const INSTAGRAM = 'https://instagram.com/leeboss_tj';
 
 /** Where the shop is, when it is open, and how to write to it. */
 export async function Footer() {
@@ -25,15 +26,24 @@ export async function Footer() {
         ))}
 
         <div>
-          <h2 className="text-sm font-semibold text-ink">Написать нам</h2>
+          <h2 className="text-sm font-semibold text-ink">Мы в соцсетях</h2>
           <a
             href={TELEGRAM}
             target="_blank"
             rel="noreferrer noopener"
-            className="mt-3 inline-flex items-center gap-2 text-sm text-ink-muted hover:text-brand"
+            className="mt-3 flex items-center gap-2 text-sm text-ink-muted hover:text-brand"
           >
             <Send className="size-4 shrink-0 text-ink-faint" aria-hidden />
             Telegram · @leebosstj
+          </a>
+          <a
+            href={INSTAGRAM}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="mt-2 flex items-center gap-2 text-sm text-ink-muted hover:text-brand"
+          >
+            <Camera className="size-4 shrink-0 text-ink-faint" aria-hidden />
+            Instagram · @leeboss_tj
           </a>
         </div>
       </div>
