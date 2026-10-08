@@ -48,14 +48,15 @@ export function nextStatuses(current: OrderStatus, method: DeliveryMethod): Orde
 }
 
 export function statusTone(status: OrderStatus): string {
+  // one colour, four strengths: what needs action now is the loudest
   switch (status) {
     case OrderStatus.NEW:
-      return 'bg-brand-soft text-brand';
+      return 'bg-brand text-white';
     case OrderStatus.COMPLETED:
-      return 'bg-emerald-50 text-emerald-700';
+      return 'border border-brand/30 text-brand';
     case OrderStatus.CANCELLED:
-      return 'bg-surface-alt text-ink-faint';
+      return 'border border-line text-ink-faint';
     default:
-      return 'bg-amber-50 text-amber-700';
+      return 'bg-brand-soft text-brand';
   }
 }

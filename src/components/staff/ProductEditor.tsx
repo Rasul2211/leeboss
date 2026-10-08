@@ -58,7 +58,7 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
 function Saved({ shown }: { shown: boolean }) {
   if (!shown) return null;
   return (
-    <span className="inline-flex items-center gap-1 text-xs text-emerald-600">
+    <span className="inline-flex items-center gap-1 text-xs text-brand">
       <Check className="size-3.5" aria-hidden />
       Сохранено
     </span>
@@ -290,7 +290,7 @@ function StockRow({ variant, onSaved }: { variant: Variant; onSaved: () => void 
 
       <Button size="sm" variant="outline" onClick={save} disabled={pending || !dirty}>
         {pending ? <Loader2 className="size-3.5 animate-spin" aria-hidden /> : null}
-        {done ? <Check className="size-3.5 text-emerald-600" aria-hidden /> : null}
+        {done ? <Check className="size-3.5 text-brand" aria-hidden /> : null}
         {done ? '' : 'ОК'}
       </Button>
     </li>

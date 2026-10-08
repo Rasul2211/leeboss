@@ -138,7 +138,7 @@ function ZoneCard({ zone }: { zone: ZoneRow }) {
           Сохранить
         </Button>
         {done ? (
-          <span className="inline-flex items-center gap-1 text-xs text-emerald-600">
+          <span className="inline-flex items-center gap-1 text-xs text-brand">
             <Check className="size-3.5" aria-hidden />
             Сохранено
           </span>

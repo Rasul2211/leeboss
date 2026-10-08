@@ -1,22 +1,23 @@
 @import 'tailwindcss';
 
 /*
-  Brand palette.
-  --brand-red was sampled pixel-by-pixel from the LEEBOSS logo badge (#790505):
-  a deep burgundy, not a bright red. Everything else is built around it.
+  Brand palette: white, and the burgundy of the logo badge (#790505, sampled
+  pixel by pixel). Nothing else carries colour. Text is black and grey; lines
+  and the faint fill behind photographs are the burgundy at a whisper, so even
+  the quiet parts of the page lean towards the logo rather than towards beige.
 */
 @theme {
   --color-brand: #790505;
-  --color-brand-hover: #8e0a0a;
-  --color-brand-soft: #f6eaea;
+  --color-brand-hover: #5e0404;
+  --color-brand-soft: #f7ecec;
 
   --color-ink: #111111;
   --color-ink-muted: #6b6b6b;
   --color-ink-faint: #9b9b9b;
 
-  --color-line: #e7e5e2;
+  --color-line: #ece2e2;
   --color-surface: #ffffff;
-  --color-surface-alt: #f7f6f4;
+  --color-surface-alt: #fcf9f9;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-logo: var(--font-archivo), 'Arial Black', sans-serif;

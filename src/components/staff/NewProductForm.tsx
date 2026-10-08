@@ -149,7 +149,7 @@ export function NewProductForm({ categories }: { categories: CategoryOption[] })
               title={c.name}
               aria-pressed={c.hex === colour.hex}
               className={cn(
-                'size-9 rounded-full ring-1 ring-black/10 transition-transform',
+                'size-9 rounded-full ring-1 ring-line transition-transform',
                 c.hex === colour.hex && 'ring-2 ring-brand ring-offset-2',
               )}
               style={{ backgroundColor: c.hex }}
@@ -172,7 +172,7 @@ export function NewProductForm({ categories }: { categories: CategoryOption[] })
                   'h-10 min-w-12 rounded-lg border px-3 text-sm transition-colors',
                   sizes.includes(size)
                     ? 'border-brand bg-brand text-white'
-                    : 'border-line text-ink hover:border-ink/40',
+                    : 'border-line text-ink hover:border-brand/50',
                 )}
               >
                 {size}

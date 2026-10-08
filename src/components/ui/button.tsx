@@ -6,9 +6,9 @@ type Size = 'sm' | 'md' | 'lg';
 
 const VARIANTS: Record<Variant, string> = {
   primary: 'bg-brand text-white hover:bg-brand-hover active:bg-brand-hover',
-  secondary: 'bg-ink text-white hover:bg-ink/90',
-  outline: 'border border-line bg-white text-ink hover:border-ink/30 hover:bg-surface-alt',
-  ghost: 'text-ink hover:bg-surface-alt',
+  secondary: 'border border-brand bg-white text-brand hover:bg-brand-soft',
+  outline: 'border border-line bg-white text-ink hover:border-brand/40 hover:bg-surface-alt',
+  ghost: 'text-ink hover:bg-brand-soft hover:text-brand',
 };
 
 const SIZES: Record<Size, string> = {

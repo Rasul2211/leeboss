@@ -139,8 +139,8 @@ export default async function CatalogPage({ params }: { params: Promise<Params> 
                 className={cn(
                   'inline-flex h-9 items-center whitespace-nowrap rounded-full border px-4 text-sm transition-colors',
                   chip.active
-                    ? 'border-ink bg-ink text-white'
-                    : 'border-line text-ink-muted hover:border-ink/40 hover:text-ink',
+                    ? 'border-brand bg-brand text-white'
+                    : 'border-line text-ink-muted hover:border-brand/50 hover:text-ink',
                 )}
               >
                 {chip.label}

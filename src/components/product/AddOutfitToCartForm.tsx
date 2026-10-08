@@ -101,7 +101,7 @@ function SizeRow({
             aria-pressed={size === value}
             className={cn(
               'h-10 min-w-12 rounded-lg border px-3 text-sm transition-colors',
-              size === value ? 'border-brand bg-brand text-white' : 'border-line text-ink hover:border-ink/40',
+              size === value ? 'border-brand bg-brand text-white' : 'border-line text-ink hover:border-brand/50',
             )}
           >
             {size}

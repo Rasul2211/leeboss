@@ -163,7 +163,7 @@ export function OutfitBuilder({ products, initial = {} }: Props) {
                   <button
                     type="button"
                     onClick={() => patch(row.slot, { on: true })}
-                    className="inline-flex h-9 items-center gap-1.5 rounded-full border border-dashed border-line px-4 text-sm text-ink-muted hover:border-ink/40 hover:text-ink"
+                    className="inline-flex h-9 items-center gap-1.5 rounded-full border border-dashed border-line px-4 text-sm text-ink-muted hover:border-brand/50 hover:text-ink"
                   >
                     <Plus className="size-4" aria-hidden />
                     {row.label}
@@ -236,7 +236,7 @@ export function OutfitBuilder({ products, initial = {} }: Props) {
                           title={color.name}
                           style={{ backgroundColor: color.hex }}
                           className={cn(
-                            'size-6 rounded-full ring-1 ring-black/10',
+                            'size-6 rounded-full ring-1 ring-line',
                             color.key === pick.colorKey && 'ring-2 ring-brand ring-offset-2',
                           )}
                         />
@@ -254,7 +254,7 @@ export function OutfitBuilder({ products, initial = {} }: Props) {
                             'price-figures h-8 min-w-9 rounded-lg border px-2 text-xs transition-colors',
                             size === pick.size
                               ? 'border-brand bg-brand text-white'
-                              : 'border-line text-ink hover:border-ink/40',
+                              : 'border-line text-ink hover:border-brand/50',
                           )}
                         >
                           {size}

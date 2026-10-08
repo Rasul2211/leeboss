@@ -22,7 +22,7 @@ function Submit({ label }: { label: string }) {
 function Saved({ shown }: { shown?: boolean }) {
   if (!shown) return null;
   return (
-    <span className="inline-flex items-center gap-1 text-sm text-emerald-600">
+    <span className="inline-flex items-center gap-1 text-sm text-brand">
       <Check className="size-4" aria-hidden />
       Сохранено
     </span>

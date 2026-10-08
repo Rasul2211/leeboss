@@ -133,7 +133,7 @@ export function CheckoutForm({ subtotal, dushanbe, regional, points, defaults }:
                       aria-pressed={point.id === pointId}
                       className={cn(
                         'block w-full rounded-lg border px-4 py-3 text-left transition-colors',
-                        point.id === pointId ? 'border-brand bg-brand-soft' : 'border-line hover:border-ink/30',
+                        point.id === pointId ? 'border-brand bg-brand-soft' : 'border-line hover:border-brand/40',
                       )}
                     >
                       <span className="block text-sm font-medium text-ink">{point.name}</span>
@@ -309,7 +309,7 @@ function Option({
       aria-pressed={active}
       className={cn(
         'flex w-full items-start gap-3 rounded-lg border px-4 py-3 text-left transition-colors',
-        active ? 'border-brand bg-brand-soft' : 'border-line hover:border-ink/30',
+        active ? 'border-brand bg-brand-soft' : 'border-line hover:border-brand/40',
       )}
     >
       <Icon className="mt-0.5 size-4 shrink-0 text-ink-muted" aria-hidden />

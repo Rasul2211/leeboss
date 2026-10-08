@@ -152,7 +152,7 @@ function MemberCard({ member }: { member: StaffMember }) {
                     'flex cursor-pointer items-center gap-2.5 rounded-lg border px-3 py-2 text-sm transition-colors',
                     granted.includes(permission)
                       ? 'border-brand bg-brand-soft text-ink'
-                      : 'border-line text-ink-muted hover:border-ink/30',
+                      : 'border-line text-ink-muted hover:border-brand/40',
                   )}
                 >
                   <input
@@ -173,7 +173,7 @@ function MemberCard({ member }: { member: StaffMember }) {
               Сохранить права
             </Button>
             {done ? (
-              <span className="inline-flex items-center gap-1 text-xs text-emerald-600">
+              <span className="inline-flex items-center gap-1 text-xs text-brand">
                 <Check className="size-3.5" aria-hidden />
                 Сохранено
               </span>

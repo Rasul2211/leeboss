@@ -152,7 +152,7 @@ function FilterChip({
       href={href}
       className={cn(
         'inline-flex h-8 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3 text-xs transition-colors',
-        active ? 'border-ink bg-ink text-white' : 'border-line bg-white text-ink-muted hover:border-ink/30',
+        active ? 'border-brand bg-brand text-white' : 'border-line bg-white text-ink-muted hover:border-brand/40',
       )}
     >
       {children}

@@ -51,7 +51,7 @@ export function StatusControl({
               'h-9 rounded-lg border px-3 text-sm transition-colors',
               option === status
                 ? 'border-brand bg-brand text-white'
-                : 'border-line text-ink hover:border-ink/40',
+                : 'border-line text-ink hover:border-brand/50',
             )}
           >
             {ORDER_STATUS_LABELS[option]}

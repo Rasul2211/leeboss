@@ -62,7 +62,7 @@ export default async function ContactsPage() {
             href="https://instagram.com/leeboss_tj"
             target="_blank"
             rel="noreferrer noopener"
-            className="inline-flex h-11 items-center gap-2 rounded-lg border border-line bg-white px-5 text-sm font-medium text-ink transition-colors hover:border-ink/30"
+            className="inline-flex h-11 items-center gap-2 rounded-lg border border-line bg-white px-5 text-sm font-medium text-ink transition-colors hover:border-brand/40"
           >
             Instagram
           </a>

@@ -64,7 +64,7 @@ export async function ProductsTable({
         />
         <button
           type="submit"
-          className="h-10 rounded-lg border border-line bg-white px-4 text-sm text-ink hover:border-ink/30"
+          className="h-10 rounded-lg border border-line bg-white px-4 text-sm text-ink hover:border-brand/40"
         >
           Найти
         </button>

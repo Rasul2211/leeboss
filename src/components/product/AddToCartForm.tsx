@@ -100,7 +100,7 @@ export function AddToCartForm({ colors, variants, sizeType }: Props) {
                 aria-label={color.name}
                 title={color.name}
                 className={cn(
-                  'size-9 rounded-full ring-1 ring-black/10 transition-transform',
+                  'size-9 rounded-full ring-1 ring-line transition-transform',
                   color.id === colorId && 'ring-2 ring-brand ring-offset-2',
                 )}
                 style={{ backgroundColor: color.hex }}
@@ -130,7 +130,7 @@ export function AddToCartForm({ colors, variants, sizeType }: Props) {
                     'h-10 min-w-12 rounded-lg border px-3 text-sm transition-colors',
                     out && 'cursor-not-allowed border-line text-ink-faint line-through opacity-60',
                     !out && item.value === size && 'border-brand bg-brand text-white',
-                    !out && item.value !== size && 'border-line text-ink hover:border-ink/40',
+                    !out && item.value !== size && 'border-line text-ink hover:border-brand/50',
                   )}
                 >
                   {item.value}

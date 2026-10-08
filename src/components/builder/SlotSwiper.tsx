@@ -119,7 +119,7 @@ export function SlotSwiper({
             disabled={target < 0 || target >= items.length}
             aria-label={side === 'prev' ? `${label}: предыдущая вещь` : `${label}: следующая вещь`}
             className={cn(
-              'absolute top-1/2 hidden size-10 -translate-y-1/2 place-items-center rounded-full border border-line bg-white text-ink shadow-sm transition-opacity hover:border-ink/40 disabled:opacity-0 lg:grid',
+              'absolute top-1/2 hidden size-10 -translate-y-1/2 place-items-center rounded-full border border-line bg-white text-ink shadow-sm transition-opacity hover:border-brand/50 disabled:opacity-0 lg:grid',
               side === 'prev' ? 'left-[calc(50%-11rem)]' : 'right-[calc(50%-11rem)]',
             )}
           >

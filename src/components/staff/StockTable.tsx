@@ -103,7 +103,7 @@ function Row({ root, row }: { root: string; row: StockRowData }) {
         }
       >
         {pending ? <Loader2 className="size-3.5 animate-spin" aria-hidden /> : null}
-        {done ? <Check className="size-3.5 text-emerald-600" aria-hidden /> : 'Сохранить'}
+        {done ? <Check className="size-3.5 text-brand" aria-hidden /> : 'Сохранить'}
       </Button>
     </li>
   );

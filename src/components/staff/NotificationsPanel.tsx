@@ -169,7 +169,7 @@ export function NotificationsPanel({
 function Step({ number, title, body }: { number: number; title: string; body: React.ReactNode }) {
   return (
     <li className="flex gap-4">
-      <span className="price-figures grid size-7 shrink-0 place-items-center rounded-full bg-ink text-xs font-semibold text-white">
+      <span className="price-figures grid size-7 shrink-0 place-items-center rounded-full bg-brand text-xs font-semibold text-white">
         {number}
       </span>
       <div className="min-w-0 flex-1">

@@ -109,7 +109,7 @@ function Tile({
     <li>
       <Link
         href={href}
-        className="block rounded-card border border-line px-4 py-4 transition-colors hover:border-ink/25"
+        className="block rounded-card border border-line px-4 py-4 transition-colors hover:border-brand/30"
       >
         <Icon className="size-4 text-ink-faint" aria-hidden />
         <p className="price-figures mt-2 text-xl font-semibold text-ink">{value}</p>

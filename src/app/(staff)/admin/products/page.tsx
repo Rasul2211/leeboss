@@ -27,7 +27,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
             </Link>
             <Link
               href="/admin/outfits/new"
-              className="inline-flex h-10 items-center gap-1.5 rounded-lg border border-line px-4 text-sm font-medium text-ink hover:border-ink/40"
+              className="inline-flex h-10 items-center gap-1.5 rounded-lg border border-line px-4 text-sm font-medium text-ink hover:border-brand/50"
             >
               <Shirt className="size-4" aria-hidden />
               Новый образ

@@ -78,9 +78,9 @@ function ReviewCard({ review }: { review: ReviewRow }) {
         <span
           className={cn(
             'rounded-full px-2.5 py-0.5 text-xs',
-            review.status === ReviewStatus.APPROVED && 'bg-emerald-50 text-emerald-700',
-            review.status === ReviewStatus.PENDING && 'bg-amber-50 text-amber-700',
-            review.status === ReviewStatus.REJECTED && 'bg-surface-alt text-ink-faint',
+            review.status === ReviewStatus.APPROVED && 'bg-brand-soft text-brand',
+            review.status === ReviewStatus.PENDING && 'bg-brand text-white',
+            review.status === ReviewStatus.REJECTED && 'border border-line text-ink-faint',
           )}
         >
           {STATUS_LABELS[review.status]}
